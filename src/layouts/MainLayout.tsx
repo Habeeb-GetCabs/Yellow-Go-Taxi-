@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Phone, MessageCircle, MapPin, ArrowRight } from 'lucide-react';
+import { Menu, X, Phone, MessageCircle, MapPin, ArrowRight, Car } from 'lucide-react';
 import {
   business,
   hasConfirmedPhone,
@@ -50,10 +50,11 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
 
   const navItems = [
     { label: 'Home', path: '/' },
-    { label: 'Taxi Services', path: '/services/' },
+    { label: 'Local Taxi', path: '/services/local-taxi/' },
+    { label: 'Outstation Cabs', path: '/services/outstation-drop/' },
+    { label: 'Hourly Rental', path: '/services/hourly-rental/' },
     { label: 'Tours', path: '/tours/' },
-    { label: 'Travel Blog', path: '/blog/' },
-    { label: 'About Us', path: '/about/' },
+    { label: 'Blog', path: '/blog/' },
     { label: 'Contact', path: '/contact/' },
   ];
 
@@ -69,23 +70,29 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
         Skip to main content
       </a>
 
-      {/* Main Navigation Header — Strict 3-Zone Top Bar Contract */}
-      <header className="sticky top-0 z-40 border-b border-[#E5E0D5] bg-white/95 backdrop-blur-xs">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-8">
-          {/* Zone 1: Single clean text element wordmark */}
+      {/* Main Navigation Header — Reference Mockup Exact Header */}
+      <header className="sticky top-0 z-40 border-b border-slate-100 bg-white/98 backdrop-blur-xs">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-6">
+          {/* Zone 1: Yellow Go Taxi Emblem + Wordmark */}
           <a
             href="/"
             onClick={(e) => handleLinkClick(e, '/')}
             aria-label="Yellow Go Taxi Home"
-            className="text-xl font-extrabold tracking-tight text-[#101820] whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#101820]"
+            className="flex items-center gap-2.5 shrink-0 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#101820]"
           >
-            {business.name}
+            <div className="w-10 h-10 rounded-xl bg-[#F5C518] flex items-center justify-center text-[#101820] shadow-xs shrink-0">
+              <Car className="h-5 w-5 fill-current" aria-hidden="true" />
+            </div>
+            <div className="flex flex-col leading-none">
+              <span className="text-base font-extrabold tracking-tight text-[#101820]">Yellow</span>
+              <span className="text-xs font-bold tracking-tight text-[#101820] mt-0.5">Go Taxi</span>
+            </div>
           </a>
 
-          {/* Zone 2: Clean single-line text navigation links */}
+          {/* Zone 2: Navigation Links matching reference */}
           <nav
             aria-label="Primary Navigation"
-            className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-700"
+            className="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-700"
           >
             {navItems.map((item) => {
               const isActive =
@@ -98,10 +105,10 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
                   href={item.path}
                   onClick={(e) => handleLinkClick(e, item.path)}
                   aria-current={isActive ? 'page' : undefined}
-                  className={`py-1 transition-colors whitespace-nowrap shrink-0 underline-offset-8 hover:text-[#101820] hover:underline ${
+                  className={`py-1 transition-colors whitespace-nowrap shrink-0 hover:text-[#101820] ${
                     isActive
-                      ? 'font-bold text-[#101820] underline decoration-[#F5C518] decoration-2'
-                      : ''
+                      ? 'font-bold text-[#101820] border-b-2 border-[#101820]'
+                      : 'hover:border-b-2 hover:border-slate-300'
                   }`}
                 >
                   {item.label}
@@ -110,30 +117,15 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
             })}
           </nav>
 
-          {/* Zone 3: 1 Primary Action + Mobile Hamburger Button */}
+          {/* Zone 3: Yellow Phone Pill Button + Mobile Hamburger Button */}
           <div className="flex items-center gap-3 shrink-0">
             <a
-              href="/#booking-section"
-              onClick={(e) => {
-                if (!e.metaKey && !e.ctrlKey && !e.shiftKey && e.button === 0) {
-                  e.preventDefault();
-                  if (currentPath !== '/') {
-                    onNavigate('/');
-                    setTimeout(() => {
-                      document
-                        .getElementById('booking-section')
-                        ?.scrollIntoView({ behavior: 'smooth' });
-                    }, 80);
-                  } else {
-                    document
-                      .getElementById('booking-section')
-                      ?.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }
-              }}
-              className="inline-flex min-h-[40px] items-center justify-center rounded-lg bg-[#101820] px-4 py-2 text-xs sm:text-sm font-bold text-[#F5C518] transition-colors hover:bg-slate-800 whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#101820]"
+              href={`tel:${business.phone.replace(/[^\d+]/g, '')}`}
+              aria-label={`Call Yellow Go Taxi at ${business.phone}`}
+              className="inline-flex min-h-[42px] items-center justify-center gap-2 rounded-full bg-[#F5C518] px-4 sm:px-5 py-2 text-xs sm:text-sm font-bold text-[#101820] transition-colors hover:bg-[#eab808] whitespace-nowrap shrink-0 shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#101820]"
             >
-              Book Now
+              <Phone className="h-4 w-4 fill-current shrink-0" aria-hidden="true" />
+              <span>{business.phone}</span>
             </a>
 
             <button
@@ -142,7 +134,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-navigation-drawer"
               aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-              className="inline-flex md:hidden min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-slate-200 text-[#101820] hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-[#101820]"
+              className="inline-flex lg:hidden min-h-[42px] min-w-[42px] items-center justify-center rounded-lg border border-slate-200 text-[#101820] hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-[#101820]"
             >
               {mobileMenuOpen ? (
                 <X className="h-5 w-5" aria-hidden="true" />
@@ -287,20 +279,34 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
         {children}
       </main>
 
-      {/* Floating WhatsApp CTA — Rendered ONLY when business WhatsApp number is configured */}
-      {hasConfirmedWhatsapp() && cleanWa && (
-        <a
-          href={`https://wa.me/${cleanWa}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => trackEvent('whatsapp_click', { location: 'floating_cta' })}
-          aria-label="Chat with Yellow Go Taxi on WhatsApp"
-          className="fixed bottom-5 right-5 z-30 inline-flex min-h-[48px] items-center gap-2 rounded-full bg-[#15803D] px-4 py-3 text-xs font-bold text-white shadow-lg transition-transform hover:scale-105"
-        >
-          <MessageCircle className="h-5 w-5" aria-hidden="true" />
-          <span className="hidden sm:inline">WhatsApp Enquiry</span>
-        </a>
-      )}
+      {/* Bottom Floating / Sticky Call & WhatsApp CTA buttons */}
+      <div className="fixed bottom-4 right-4 z-40 flex items-center gap-2.5 sm:gap-3">
+        {hasConfirmedPhone() && (
+          <a
+            href={`tel:${business.phone.replace(/[^\d+]/g, '')}`}
+            onClick={() => trackEvent('phone_click', { location: 'floating_bottom_cta' })}
+            aria-label={`Call Yellow Go Taxi at ${business.phone}`}
+            className="inline-flex min-h-[48px] items-center gap-2 rounded-full bg-[#F5C518] px-4 sm:px-5 py-3 text-xs sm:text-sm font-extrabold text-[#101820] shadow-xl ring-2 ring-white/80 transition-transform hover:scale-105 active:scale-95"
+          >
+            <Phone className="h-4 sm:h-5 w-4 sm:w-5 fill-current shrink-0" aria-hidden="true" />
+            <span className="whitespace-nowrap">Call {business.phone}</span>
+          </a>
+        )}
+
+        {hasConfirmedWhatsapp() && cleanWa && (
+          <a
+            href={`https://wa.me/${cleanWa}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackEvent('whatsapp_click', { location: 'floating_bottom_cta' })}
+            aria-label="Chat with Yellow Go Taxi on WhatsApp"
+            className="inline-flex min-h-[48px] items-center gap-2 rounded-full bg-[#15803D] px-4 py-3 text-xs sm:text-sm font-bold text-white shadow-xl ring-2 ring-white/80 transition-transform hover:scale-105 active:scale-95 hover:bg-[#166534]"
+          >
+            <MessageCircle className="h-5 w-5 shrink-0" aria-hidden="true" />
+            <span className="hidden sm:inline whitespace-nowrap">WhatsApp Enquiry</span>
+          </a>
+        )}
+      </div>
 
       {/* Comprehensive SEO & Navigation Footer */}
       <footer className="border-t border-slate-800 bg-[#101820] text-slate-300">

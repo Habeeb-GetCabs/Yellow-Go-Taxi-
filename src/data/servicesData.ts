@@ -13,6 +13,7 @@ export interface ServicePageData {
   introParagraph: string;
   imageFilename: string;
   imageAlt: string;
+  vehicleModel?: string;
   idealFor: string[];
   howItWorksNotes: string[];
   bookingDefaults: {
@@ -32,6 +33,7 @@ export const TAXI_SERVICES: ServicePageData[] = [
     path: '/services/local-taxi/',
     tripType: 'local',
     title: 'Local Taxi',
+    vehicleModel: '2026 Maruti Suzuki Dzire (Sedan)',
     shortDescription: 'Comfortable city rides and local point-to-point transportation across Coimbatore.',
     metaTitle: 'Coimbatore Local Taxi Service | Point-to-Point City Rides | Yellow Go Taxi',
     metaDescription:
@@ -40,7 +42,7 @@ export const TAXI_SERVICES: ServicePageData[] = [
     introParagraph:
       'Whether you are travelling between Coimbatore International Airport (CJB), Coimbatore Junction Railway Station, Gandhipuram, R.S. Puram, or Saravanampatti IT Park, our Local Taxi service provides direct point-to-point city transfers with upfront estimated fares.',
     imageFilename: 'service-local.webp',
-    imageAlt: 'Local city taxi service in Coimbatore for point-to-point urban travel',
+    imageAlt: 'Brand new 2026 Maruti Suzuki Dzire sedan with Yellow Go Taxi branding on doors for local city rides in Coimbatore',
     idealFor: [
       'Coimbatore International Airport (CJB) pickups and drops',
       'Coimbatore Junction and Podanur Railway Station transfers',
@@ -76,6 +78,7 @@ export const TAXI_SERVICES: ServicePageData[] = [
     path: '/services/hourly-rental/',
     tripType: 'hourly',
     title: 'Hourly Rental',
+    vehicleModel: '2026 Hyundai Aura (Sedan)',
     shortDescription: 'Flexible hourly rental packages for business meetings, shopping, and city sightseeing.',
     metaTitle: 'Hourly Taxi Rental in Coimbatore | Flexible City Packages | Yellow Go Taxi',
     metaDescription:
@@ -84,7 +87,7 @@ export const TAXI_SERVICES: ServicePageData[] = [
     introParagraph:
       'When your schedule involves multiple stops across Coimbatore—such as corporate visits along Avinashi Road, shopping in Cross Cut Road and R.S. Puram, or half-day local temple visits—our Hourly Rental service keeps a dedicated vehicle and driver at your disposal for your chosen duration.',
     imageFilename: 'service-hourly.webp',
-    imageAlt: 'Flexible hourly taxi rental package in Coimbatore for multi-stop city errands and business meetings',
+    imageAlt: '2026 Hyundai Aura sedan with Yellow Go Taxi branding on doors for flexible hourly taxi rental in Coimbatore',
     idealFor: [
       'Corporate executives attending back-to-back meetings across Peelamedu, Saravanampatti, and Race Course',
       'Family shopping trips across Cross Cut Road, Town Hall, and R.S. Puram',
@@ -121,6 +124,7 @@ export const TAXI_SERVICES: ServicePageData[] = [
     path: '/services/outstation-drop/',
     tripType: 'outstation_drop',
     title: 'Outstation Drop',
+    vehicleModel: '2026 Maruti Suzuki Ertiga (MPV)',
     shortDescription: 'Point-to-point outstation drop bookings to hill stations, temples, and cities across South India.',
     metaTitle: 'Coimbatore Outstation Drop Taxi | Point-to-Point Intercity Cabs | Yellow Go Taxi',
     metaDescription:
@@ -129,7 +133,7 @@ export const TAXI_SERVICES: ServicePageData[] = [
     introParagraph:
       'Travelling from Coimbatore to another city, hill station, or pilgrimage town without requiring a return journey on the same booking? Our Outstation Drop service offers direct door-to-door transfers from Coimbatore to destinations across Tamil Nadu, Kerala, and Karnataka.',
     imageFilename: 'service-outstation.webp',
-    imageAlt: 'Outstation drop taxi from Coimbatore to destinations across Tamil Nadu, Kerala, and Karnataka',
+    imageAlt: '2026 Maruti Suzuki Ertiga with Yellow Go Taxi branding on doors for outstation drop journeys from Coimbatore',
     idealFor: [
       'Direct point-to-point transfers from Coimbatore Airport or Junction to Ooty, Coonoor, or Kotagiri',
       'Intercity drops to Kodaikanal, Munnar, Valparai, Palani, Yercaud, or Madurai',
@@ -165,6 +169,7 @@ export const TAXI_SERVICES: ServicePageData[] = [
     path: '/services/round-trip/',
     tripType: 'round_trip',
     title: 'Round Trip',
+    vehicleModel: 'Toyota Innova Hycross (SUV/MPV)',
     shortDescription: 'Return journeys with configurable multi-day duration for hill station holidays and tours.',
     metaTitle: 'Coimbatore Round Trip Taxi Service | Multi-Day Outstation Tours | Yellow Go Taxi',
     metaDescription:
@@ -173,7 +178,7 @@ export const TAXI_SERVICES: ServicePageData[] = [
     introParagraph:
       'For weekend getaways, family hill-station vacations, and multi-temple circuits starting and ending in Coimbatore, our Round Trip service keeps the same vehicle and driver with you throughout your itinerary.',
     imageFilename: 'service-round-trip.webp',
-    imageAlt: 'Multi-day round-trip taxi service from Coimbatore for family holidays and hill station tours',
+    imageAlt: 'Toyota Innova Hycross with Yellow Go Taxi branding on doors for multi-day round trips from Coimbatore',
     idealFor: [
       '2-to-5 day hill station holidays to Ooty, Kodaikanal, Valparai, Munnar, Yercaud, or Chikmagalur',
       'Same-day return excursions to Isha Yoga Center, Topslip, or Palani Temple',
@@ -207,5 +212,21 @@ export const TAXI_SERVICES: ServicePageData[] = [
 ];
 
 export function getServiceBySlug(slug: string): ServicePageData | undefined {
-  return TAXI_SERVICES.find((s) => s.slug === slug);
+  const direct = TAXI_SERVICES.find((s) => s.slug === slug);
+  if (direct) return direct;
+
+  const aliases: Record<string, string> = {
+    'coimbatore-local-taxi': 'local-taxi',
+    'outstation-taxi-coimbatore': 'outstation-drop',
+    'outstation-cabs': 'outstation-drop',
+    'outstation-taxi': 'outstation-drop',
+    'hourly-car-rental-coimbatore': 'hourly-rental',
+    'hourly-rental-coimbatore': 'hourly-rental',
+    'round-trip-taxi': 'round-trip',
+  };
+  const target = aliases[slug];
+  if (target) {
+    return TAXI_SERVICES.find((s) => s.slug === target);
+  }
+  return undefined;
 }

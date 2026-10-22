@@ -6,6 +6,12 @@ import {
   MessageSquare,
   CheckCircle2,
   ChevronDown,
+  ShieldCheck,
+  Clock,
+  MapPin,
+  Users,
+  CreditCard,
+  Headphones,
 } from 'lucide-react';
 import { SeoHead } from '../components/SeoHead';
 import { AssetImage } from '../components/AssetImage';
@@ -22,8 +28,32 @@ export interface HomePageProps {
 }
 
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
-  const [selectedHeroTripType, setSelectedHeroTripType] = useState<TripMode>('outstation_drop');
+  const [selectedHeroTripType, setSelectedHeroTripType] = useState<TripMode>('local');
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+
+  const featuredDestinationCards = [
+    { slug: 'isha-yoga-center-taxi', title: 'Isha Yoga', subtitle: 'Coimbatore' },
+    { slug: 'coimbatore-to-ooty-taxi', title: 'Ooty', subtitle: 'Hill Station' },
+    { slug: 'coimbatore-to-kodaikanal-taxi', title: 'Kodaikanal', subtitle: 'Hill Station' },
+    { slug: 'coimbatore-to-valparai-taxi', title: 'Valparai', subtitle: 'Nature Trip' },
+    { slug: 'palani-temple-taxi', title: 'Palani', subtitle: 'Temple Trip' },
+    { slug: 'masinagudi-mudumalai-taxi', title: 'Masinagudi', subtitle: 'Wildlife Trip' },
+  ].map((item) => {
+    const tour = TOUR_PAGES.find((t) => t.slug === item.slug);
+    return {
+      ...item,
+      path: tour?.path || `/tours/${item.slug}/`,
+      imageFilename: tour?.imageFilename || `${item.slug}.webp`,
+      imageAlt: tour?.imageAlt || `${item.title} tour from Coimbatore`,
+    };
+  });
+
+  const trustStripItems = [
+    { title: 'Verified & Experienced Drivers', icon: Users },
+    { title: 'Transparent Pricing', icon: CreditCard },
+    { title: 'All Over Tamil Nadu Service', icon: MapPin },
+    { title: '24/7 Customer Support', icon: Headphones },
+  ];
 
   const featuredTours = TOUR_PAGES.filter((t) => t.featuredOnHome).slice(0, 5);
   const featuredBlogs = BLOG_ARTICLES.filter((b) => b.featuredOnHome).slice(0, 4);
@@ -50,96 +80,159 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         canonicalPath="/"
       />
 
-      {/* 2. HERO SECTION WITH BOOKING FORM */}
-      <section className="relative bg-[#101820] text-white overflow-hidden border-b border-slate-800">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 lg:py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
-            {/* Left Column: Hero Content + Cinematic Hero Image Placeholder ("hero-suv.webp") */}
-            <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
-              <div className="space-y-4">
-                <p className="text-xs sm:text-sm font-semibold tracking-wide text-[#F5C518]">
-                  {business.city}, {business.state} · Local &amp; Outstation Taxi Service
+      {/* 2. HERO SECTION — EXACT REFERENCE DESIGN */}
+      <section className="relative bg-[#FAF9F5] overflow-hidden border-b border-slate-100">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 pb-10 lg:pt-12 lg:pb-14">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center">
+            {/* Left Column: Hero Typography, Benefits Badges, and Floating Booking Panel */}
+            <div className="lg:col-span-7 flex flex-col space-y-5">
+              <div className="space-y-3">
+                {/* Small introductory line */}
+                <p className="text-xs sm:text-sm font-extrabold tracking-widest text-slate-600 uppercase">
+                  SAFE · RELIABLE · AFFORDABLE
                 </p>
 
-                <h1
-                  className="font-extrabold tracking-tight text-white text-balance"
-                  style={{ fontSize: 'clamp(2.25rem, 4vw, 3.75rem)', lineHeight: 1.08 }}
-                >
-                  Your Journey. Our Priority.
+                {/* Main Heading with exact line breaks */}
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5.5xl font-extrabold tracking-tight text-[#101820] leading-[1.12]">
+                  Coimbatore’s <br />
+                  <span className="text-[#F5C518]">Trusted</span> Taxi Service
                 </h1>
 
-                <p className="text-lg sm:text-xl font-semibold text-slate-100 max-w-2xl leading-snug">
-                  Premium Taxi Services for Local Rides, Outstation Trips &amp; Memorable Tours.
-                </p>
-
-                <p className="text-sm sm:text-base text-slate-300 max-w-xl leading-relaxed">
-                  Plan your journey with a convenient booking experience, clear trip estimates and
-                  direct booking assistance.
-                </p>
-
-                {/* Primary & Secondary CTAs */}
-                <div className="pt-2 flex flex-wrap items-center gap-3">
-                  <button
-                    type="button"
-                    onClick={() => scrollToBooking()}
-                    className="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-lg bg-[#F5C518] px-6 py-3 text-sm font-bold text-[#101820] transition-colors hover:bg-[#eab808] whitespace-nowrap shrink-0"
-                  >
-                    <span>Book Your Taxi</span>
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                  </button>
-
-                  <a
-                    href="/tours/"
-                    onClick={(e) => handleLink(e, '/tours/')}
-                    className="inline-flex min-h-[48px] items-center justify-center rounded-lg border border-white/25 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10 whitespace-nowrap shrink-0"
-                  >
-                    Explore Tours
-                  </a>
-                </div>
-              </div>
-
-              {/* Cinematic Hero Image Placeholder ("hero-suv.webp") + Compact Trust Strip */}
-              <div className="space-y-3">
-                <div className="relative rounded-xl overflow-hidden shadow-lg">
-                  <AssetImage
-                    filename="hero-suv.webp"
-                    alt="Yellow Go Taxi premium touring vehicle on a highway near Coimbatore"
-                    priority={true}
-                    variant="hero"
-                    className="w-full rounded-xl"
-                  />
-                  <div
-                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent"
+                {/* Tamil Subtitle with exact script and decorative yellow underline */}
+                <div className="pt-1 inline-block">
+                  <p className="text-xl sm:text-2xl font-bold text-[#101820] tracking-wide font-sans">
+                    உங்கள் பயணம் எங்கள் பொறுப்பு
+                  </p>
+                  <svg
+                    className="w-48 sm:w-56 h-3 text-[#F5C518] mt-0.5"
+                    viewBox="0 0 200 12"
+                    fill="none"
+                    preserveAspectRatio="none"
                     aria-hidden="true"
-                  />
+                  >
+                    <path
+                      d="M3 9C45 2 135 1 197 7"
+                      stroke="currentColor"
+                      strokeWidth="5"
+                      strokeLinecap="round"
+                    />
+                  </svg>
                 </div>
 
-                {/* Compact Factual Trust Indicators */}
-                <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-200">
-                  <div className="flex items-center gap-2">
-                    <Calculator className="h-4 w-4 text-[#F5C518] shrink-0" aria-hidden="true" />
-                    <span>Upfront Route-Based Fare Estimator</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Route className="h-4 w-4 text-[#F5C518] shrink-0" aria-hidden="true" />
-                    <span>Local, Hourly, Outstation Drop &amp; Round Trip</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MessageSquare className="h-4 w-4 text-[#F5C518] shrink-0" aria-hidden="true" />
-                    <span>Direct WhatsApp Enquiry Workflow</span>
-                  </div>
+                {/* Four Hero Benefit Labels (compact horizontal row) */}
+                <div className="pt-2 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+                  {[
+                    { label: 'Safe & Verified Drivers', icon: ShieldCheck },
+                    { label: 'Transparent Pricing', symbol: '₹' },
+                    { label: 'On-Time Pickup', icon: Clock },
+                    { label: 'Local & Outstation', icon: MapPin },
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex flex-col items-center sm:items-start text-center sm:text-left gap-1.5">
+                      <div className="w-10 h-10 rounded-full bg-[#101820] text-white flex items-center justify-center font-bold text-sm shadow-xs shrink-0">
+                        {item.icon ? (
+                          <item.icon className="h-5 w-5 text-white" aria-hidden="true" />
+                        ) : (
+                          <span className="text-base font-bold text-white">{item.symbol}</span>
+                        )}
+                      </div>
+                      <span className="text-xs font-bold text-[#101820] leading-snug">
+                        {item.label}
+                      </span>
+                    </div>
+                  ))}
                 </div>
+              </div>
+
+              {/* Floating White Booking Panel in bottom-left */}
+              <div id="booking-section" className="pt-2">
+                <BookingForm
+                  initialTripType={selectedHeroTripType}
+                  heading="Book Your Ride"
+                  subheading="Instant fare calculation for local and outstation taxi trips."
+                />
               </div>
             </div>
 
-            {/* Right Column: Prominent Interactive Booking Form */}
-            <div id="booking-section" className="lg:col-span-5 flex flex-col justify-center">
-              <BookingForm
-                initialTripType={selectedHeroTripType}
-                heading="Estimate Your Trip Fare"
-                subheading="Choose your trip mode and enter pickup & drop hubs in Coimbatore or South India."
-              />
+            {/* Right Column: Prominent Branded White SUV & Coimbatore Landscape */}
+            <div className="lg:col-span-5 relative flex items-center justify-center">
+              <div className="relative w-full rounded-2xl overflow-hidden shadow-2xl border border-slate-200/80 group">
+                <AssetImage
+                  filename="hero-suv.webp"
+                  alt="Yellow Go Taxi premium white SUV with official door branding on Coimbatore highway"
+                  priority={true}
+                  variant="hero"
+                  className="w-full object-cover transition-transform duration-500 group-hover:scale-102"
+                />
+                {/* Subtle decorative badge */}
+                <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-md rounded-full px-3.5 py-1.5 text-xs font-extrabold text-[#101820] shadow-md border border-slate-100 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-[#F5C518]" />
+                  <span>Explore Coimbatore &amp; Beyond</span>
+                </div>
+              </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. DESTINATION CARDS SECTION (DIRECTLY BENEATH HERO) */}
+      <section aria-label="Popular Destination Tours" className="py-8 sm:py-12 bg-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5 sm:gap-4">
+            {featuredDestinationCards.map((dest) => (
+              <a
+                key={dest.slug}
+                href={dest.path}
+                onClick={(e) => handleLink(e, dest.path)}
+                className="group relative block rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 aspect-4/3 sm:aspect-3/4 bg-slate-900 focus-visible:outline-2 focus-visible:outline-[#101820]"
+              >
+                <AssetImage
+                  filename={dest.imageFilename}
+                  alt={`${dest.title} ${dest.subtitle} tour from Coimbatore by Yellow Go Taxi`}
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-108"
+                />
+                <div
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent"
+                  aria-hidden="true"
+                />
+                {/* Bottom content: Title, Subtitle, and Yellow Arrow Button */}
+                <div className="absolute inset-x-0 bottom-0 p-3 sm:p-3.5 flex items-end justify-between gap-2">
+                  <div className="min-w-0">
+                    <h3 className="text-sm sm:text-base font-bold text-white tracking-tight leading-snug drop-shadow-xs truncate">
+                      {dest.title}
+                    </h3>
+                    <p className="text-[11px] sm:text-xs font-medium text-slate-200 drop-shadow-xs truncate">
+                      {dest.subtitle}
+                    </p>
+                  </div>
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#F5C518] text-[#101820] flex items-center justify-center font-bold shrink-0 shadow-sm transition-transform duration-200 group-hover:scale-110">
+                    <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 4. BOTTOM TRUST STRIP */}
+      <section aria-label="Customer Guarantees" className="border-y border-slate-200 bg-white py-6">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-200 gap-4 sm:gap-0">
+            {trustStripItems.map((item, idx) => (
+              <div
+                key={idx}
+                className={`flex items-center gap-3.5 ${idx > 0 ? 'sm:pl-6' : ''} ${
+                  idx < trustStripItems.length - 1 ? 'sm:pr-6' : ''
+                } py-2 sm:py-0`}
+              >
+                <div className="w-12 h-12 rounded-full bg-[#F5C518] text-[#101820] flex items-center justify-center shrink-0 shadow-xs">
+                  <item.icon className="h-6 w-6 stroke-[2.2]" aria-hidden="true" />
+                </div>
+                <span className="text-sm sm:text-base font-bold text-[#101820] leading-snug">
+                  {item.title}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </section>

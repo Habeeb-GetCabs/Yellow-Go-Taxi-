@@ -11,6 +11,12 @@ import {
   CheckCircle2,
   Copy,
   Check,
+  Car,
+  Route,
+  Repeat,
+  ArrowRight,
+  ThumbsUp,
+  Zap,
 } from 'lucide-react';
 import { business, hasConfirmedWhatsapp } from '../config/business';
 import { TRIP_TYPE_LABELS } from '../config/fares';
@@ -148,14 +154,6 @@ export const BookingForm: React.FC<BookingFormProps> = ({
         return;
       }
     }
-    if (!customerName.trim() || customerName.trim().length < 2) {
-      setValidationError('Please enter your name (at least 2 characters).');
-      return;
-    }
-    if (!validatePhone(customerPhone)) {
-      setValidationError('Please enter a valid 10-digit phone number.');
-      return;
-    }
 
     const parsedHours = Number(bookedHours);
     const parsedDays = Number(chargeableDays);
@@ -218,8 +216,8 @@ export const BookingForm: React.FC<BookingFormProps> = ({
     ? buildWhatsAppUrl({
         businessName: business.name,
         whatsappNumber: business.whatsapp,
-        customerName,
-        customerPhone,
+        customerName: customerName.trim() || 'Traveler',
+        customerPhone: customerPhone.trim(),
         tripType,
         pickupAddress,
         dropAddress,
@@ -241,21 +239,19 @@ export const BookingForm: React.FC<BookingFormProps> = ({
   };
 
   return (
-    <div className="rounded-xl border border-[#E2DDD2] bg-white p-5 sm:p-6 shadow-xs text-[#101820]">
-      <div className="mb-4">
-        <h2 className="text-lg sm:text-xl font-bold tracking-tight text-[#101820]">
-          {heading}
-        </h2>
-        <p className="mt-1 text-xs sm:text-sm text-slate-600">{subheading}</p>
-      </div>
-
-      {/* Interactive Trip Type Segmented Tabs (4 Required Modes) */}
+    <div className="rounded-2xl border border-slate-100 bg-white p-4 sm:p-5 shadow-xl text-[#101820]">
+      {/* Interactive Trip Type Segmented Tabs (4 Required Modes in Exact Order) */}
       <div
         role="tablist"
         aria-label="Select Trip Type"
-        className="grid grid-cols-2 gap-1.5 rounded-lg bg-[#F4F1EA] p-1.5 mb-5"
+        className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 rounded-xl bg-slate-100/70 p-1 mb-4"
       >
-        {TRIP_MODES.map((mode) => {
+        {[
+          { mode: 'local' as TripMode, label: 'Local Taxi', icon: Car },
+          { mode: 'hourly' as TripMode, label: 'Hourly Rental', icon: Clock },
+          { mode: 'outstation_drop' as TripMode, label: 'Outstation', icon: Route },
+          { mode: 'round_trip' as TripMode, label: 'Round Trip', icon: Repeat },
+        ].map(({ mode, label, icon: TabIcon }) => {
           const isActive = tripType === mode;
           return (
             <button
@@ -269,32 +265,33 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                 setRouteError(null);
                 setValidationError(null);
               }}
-              className={`min-h-[40px] px-3 py-2 text-xs font-semibold rounded-md transition-colors whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#101820] ${
+              className={`min-h-[42px] px-3 py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all flex items-center justify-center gap-2 whitespace-nowrap shrink-0 ${
                 isActive
-                  ? 'bg-[#101820] text-[#F5C518] shadow-xs'
-                  : 'text-slate-700 hover:text-[#101820] hover:bg-white/60'
+                  ? 'bg-[#F5C518] text-[#101820] font-bold shadow-xs'
+                  : 'text-slate-600 hover:text-[#101820] hover:bg-white/80'
               }`}
             >
-              {TRIP_TYPE_LABELS[mode]}
+              <TabIcon className="h-4 w-4 shrink-0" aria-hidden="true" />
+              <span>{label}</span>
             </button>
           );
         })}
       </div>
 
-      <form onSubmit={handleCalculateFare} noValidate className="space-y-4">
-        {/* Pickup & Drop Address Fields with Autocomplete */}
-        <div className="space-y-3">
+      <form onSubmit={handleCalculateFare} noValidate className="space-y-3.5">
+        {/* Main Inputs Row: Pick up location, Drop location, and Get Fare Button */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
           {/* Pickup Input */}
-          <div className="relative">
+          <div className="md:col-span-5 relative">
             <label
               htmlFor={`${formId}-pickup`}
               className="block text-xs font-semibold text-[#101820] mb-1"
             >
-              Pickup Address
+              Pick up location
             </label>
             <div className="relative">
               <MapPin
-                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400"
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500"
                 aria-hidden="true"
               />
               <input
@@ -310,8 +307,8 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                   setShowPickupSuggestions(true);
                   setFareResult(null);
                 }}
-                placeholder="e.g. Coimbatore International Airport (CJB)"
-                className="w-full min-h-[44px] rounded-lg border border-slate-300 bg-white pl-9 pr-3 py-2 text-sm text-[#101820] placeholder:text-slate-400 focus:border-[#101820] focus:outline-none focus:ring-2 focus:ring-[#F5C518]/50"
+                placeholder="Enter pick up location"
+                className="w-full min-h-[46px] rounded-lg border border-slate-200 bg-white pl-9 pr-3 py-2 text-sm text-[#101820] placeholder:text-slate-400 focus:border-[#101820] focus:outline-none focus:ring-2 focus:ring-[#F5C518]/50"
               />
             </div>
 
@@ -341,101 +338,19 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                 ))}
               </ul>
             )}
-
-            {/* Quick Pickup Hub Selectors */}
-            <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-slate-500">
-              <span className="font-medium text-slate-600">Pickup hubs:</span>
-              {[
-                { short: 'Gandhipuram', full: 'Gandhipuram Central Bus Stand' },
-                { short: 'Peelamedu', full: 'Peelamedu (PSG Tech /TIDEL Park)' },
-                { short: 'Airport', full: 'Coimbatore International Airport (CJB)' },
-                { short: 'Railway Station', full: 'Coimbatore Junction Railway Station' },
-                { short: 'R.S. Puram', full: 'R.S. Puram (D.B. Road)' },
-              ].map((hub, idx) => (
-                <React.Fragment key={hub.short}>
-                  {idx > 0 && <span aria-hidden="true">·</span>}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setPickupAddress(hub.full);
-                      setFareResult(null);
-                      setRouteError(null);
-                    }}
-                    className="underline hover:text-[#101820] font-medium"
-                  >
-                    {hub.short}
-                  </button>
-                </React.Fragment>
-              ))}
-            </div>
-          </div>
-
-          {/* Swap Pickup & Drop Button + Quick Route Presets */}
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-slate-600">
-              <span>Quick routes:</span>
-              <button
-                type="button"
-                onClick={() => {
-                  setPickupAddress('Coimbatore International Airport (CJB)');
-                  setDropAddress('Ooty (Udhagamandalam)');
-                  setFareResult(null);
-                  setRouteError(null);
-                }}
-                className="underline hover:text-[#101820] font-medium"
-              >
-                Airport → Ooty
-              </button>
-              <span aria-hidden="true">·</span>
-              <button
-                type="button"
-                onClick={() => {
-                  setPickupAddress('Coimbatore Junction Railway Station');
-                  setDropAddress('Isha Yoga Center & Adiyogi');
-                  setFareResult(null);
-                  setRouteError(null);
-                }}
-                className="underline hover:text-[#101820] font-medium"
-              >
-                Junction → Isha
-              </button>
-              <span aria-hidden="true">·</span>
-              <button
-                type="button"
-                onClick={() => {
-                  setPickupAddress('Gandhipuram Central Bus Stand');
-                  setDropAddress('Valparai Hill Station');
-                  setFareResult(null);
-                  setRouteError(null);
-                }}
-                className="underline hover:text-[#101820] font-medium"
-              >
-                CBE → Valparai
-              </button>
-            </div>
-
-            <button
-              type="button"
-              onClick={handleSwapLocations}
-              aria-label="Swap pickup and drop addresses"
-              className="inline-flex items-center gap-1 rounded-md border border-slate-200 px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-[#101820] whitespace-nowrap shrink-0"
-            >
-              <ArrowUpDown className="h-3 w-3" aria-hidden="true" />
-              <span>Swap</span>
-            </button>
           </div>
 
           {/* Drop Input */}
-          <div className="relative">
+          <div className="md:col-span-5 relative">
             <label
               htmlFor={`${formId}-drop`}
               className="block text-xs font-semibold text-[#101820] mb-1"
             >
-              Drop Address
+              Drop location
             </label>
             <div className="relative">
               <MapPin
-                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400"
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500"
                 aria-hidden="true"
               />
               <input
@@ -451,8 +366,8 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                   setShowDropSuggestions(true);
                   setFareResult(null);
                 }}
-                placeholder="e.g. Ooty (Udhagamandalam) or R.S. Puram"
-                className="w-full min-h-[44px] rounded-lg border border-slate-300 bg-white pl-9 pr-3 py-2 text-sm text-[#101820] placeholder:text-slate-400 focus:border-[#101820] focus:outline-none focus:ring-2 focus:ring-[#F5C518]/50"
+                placeholder="Enter drop location"
+                className="w-full min-h-[46px] rounded-lg border border-slate-200 bg-white pl-9 pr-3 py-2 text-sm text-[#101820] placeholder:text-slate-400 focus:border-[#101820] focus:outline-none focus:ring-2 focus:ring-[#F5C518]/50"
               />
             </div>
 
@@ -483,202 +398,140 @@ export const BookingForm: React.FC<BookingFormProps> = ({
               </ul>
             )}
           </div>
+
+          {/* Primary Get Fare Button */}
+          <div className="md:col-span-2">
+            <button
+              type="submit"
+              disabled={isCalculating}
+              className="w-full min-h-[46px] rounded-lg bg-[#F5C518] px-4 py-2.5 text-sm font-bold text-[#101820] transition-colors hover:bg-[#eab808] flex items-center justify-center gap-1.5 shadow-xs whitespace-nowrap disabled:opacity-60"
+            >
+              <span>{isCalculating ? 'Calculating...' : 'Get Fare'}</span>
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </div>
         </div>
 
-        {/* Date & Duration Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label
-              htmlFor={`${formId}-date`}
-              className="block text-xs font-semibold text-[#101820] mb-1"
-            >
-              Travel Date
-            </label>
-            <div className="relative">
-              <Calendar
-                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400"
-                aria-hidden="true"
-              />
-              <input
-                id={`${formId}-date`}
-                type="date"
-                required
-                value={travelDate}
-                onChange={(e) => {
-                  setTravelDate(e.target.value);
-                  setFareResult(null);
-                }}
-                className="w-full min-h-[44px] rounded-lg border border-slate-300 bg-white pl-9 pr-3 py-2 text-sm text-[#101820] focus:border-[#101820] focus:outline-none focus:ring-2 focus:ring-[#F5C518]/50"
-              />
-            </div>
+        {/* Quick Hub Selectors & Swap Option */}
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-[11px] text-slate-500">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span className="font-semibold text-slate-700">Popular Hubs:</span>
+            {[
+              { short: 'Gandhipuram', full: 'Gandhipuram Central Bus Stand' },
+              { short: 'Peelamedu', full: 'Peelamedu (PSG Tech /TIDEL Park)' },
+              { short: 'Airport', full: 'Coimbatore International Airport (CJB)' },
+              { short: 'Railway Station', full: 'Coimbatore Junction Railway Station' },
+              { short: 'R.S. Puram', full: 'R.S. Puram (D.B. Road)' },
+            ].map((hub, idx) => (
+              <React.Fragment key={hub.short}>
+                {idx > 0 && <span aria-hidden="true">·</span>}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPickupAddress(hub.full);
+                    setFareResult(null);
+                    setRouteError(null);
+                  }}
+                  className="hover:text-[#101820] hover:underline font-medium"
+                >
+                  {hub.short}
+                </button>
+              </React.Fragment>
+            ))}
           </div>
 
-          {tripType === 'hourly' && (
-            <div>
-              <label
-                htmlFor={`${formId}-hours`}
-                className="block text-xs font-semibold text-[#101820] mb-1"
-              >
-                Rental Duration (Hours)
-              </label>
-              <div className="relative">
-                <Clock
-                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400"
-                  aria-hidden="true"
-                />
-                <input
+          <button
+            type="button"
+            onClick={handleSwapLocations}
+            aria-label="Swap pickup and drop addresses"
+            className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-600 hover:text-[#101820] underline"
+          >
+            <ArrowUpDown className="h-3 w-3" aria-hidden="true" />
+            <span>Swap locations</span>
+          </button>
+        </div>
+
+        {/* Mode-Specific Rental/Round-Trip Duration Selectors */}
+        {(tripType === 'hourly' || tripType === 'round_trip') && (
+          <div className="rounded-lg bg-slate-50 border border-slate-200/80 p-3 flex flex-wrap items-center gap-4 text-xs">
+            {tripType === 'hourly' && (
+              <div className="flex items-center gap-2">
+                <Clock className="h-4 w-4 text-slate-500" aria-hidden="true" />
+                <label htmlFor={`${formId}-hours`} className="font-semibold text-slate-800">
+                  Rental Duration:
+                </label>
+                <select
                   id={`${formId}-hours`}
-                  type="number"
-                  min={1}
-                  max={72}
-                  step="1"
-                  required
                   value={bookedHours}
                   onChange={(e) => {
                     setBookedHours(e.target.value);
                     setFareResult(null);
                   }}
-                  className="w-full min-h-[44px] rounded-lg border border-slate-300 bg-white pl-9 pr-3 py-2 text-sm font-mono-tabular text-[#101820] focus:border-[#101820] focus:outline-none focus:ring-2 focus:ring-[#F5C518]/50"
-                />
+                  className="rounded border border-slate-300 bg-white px-2 py-1 text-xs font-semibold text-[#101820]"
+                >
+                  <option value="2">2 Hours (20 km included)</option>
+                  <option value="4">4 Hours (40 km included)</option>
+                  <option value="8">8 Hours (80 km included)</option>
+                  <option value="12">12 Hours (120 km included)</option>
+                  <option value="24">24 Hours</option>
+                </select>
               </div>
-            </div>
-          )}
+            )}
 
-          {tripType === 'round_trip' && (
-            <div>
-              <label
-                htmlFor={`${formId}-days`}
-                className="block text-xs font-semibold text-[#101820] mb-1"
-              >
-                Trip Duration (Days)
-              </label>
-              <div className="relative">
-                <Clock
-                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400"
-                  aria-hidden="true"
-                />
-                <input
+            {tripType === 'round_trip' && (
+              <div className="flex items-center gap-2">
+                <Clock className="h-4 w-4 text-slate-500" aria-hidden="true" />
+                <label htmlFor={`${formId}-days`} className="font-semibold text-slate-800">
+                  Trip Duration:
+                </label>
+                <select
                   id={`${formId}-days`}
-                  type="number"
-                  min={1}
-                  max={60}
-                  step={1}
-                  required
                   value={chargeableDays}
                   onChange={(e) => {
                     setChargeableDays(e.target.value);
                     setFareResult(null);
                   }}
-                  className="w-full min-h-[44px] rounded-lg border border-slate-300 bg-white pl-9 pr-3 py-2 text-sm font-mono-tabular text-[#101820] focus:border-[#101820] focus:outline-none focus:ring-2 focus:ring-[#F5C518]/50"
-                />
+                  className="rounded border border-slate-300 bg-white px-2 py-1 text-xs font-semibold text-[#101820]"
+                >
+                  <option value="1">1 Day</option>
+                  <option value="2">2 Days</option>
+                  <option value="3">3 Days</option>
+                  <option value="4">4 Days</option>
+                  <option value="5">5 Days</option>
+                </select>
               </div>
-            </div>
-          )}
-
-          {(tripType === 'local' || tripType === 'outstation_drop') && (
-            <div className="flex flex-col justify-end">
-              <div className="rounded-lg border border-slate-200 bg-[#FAF9F5] px-3 py-2.5 text-xs text-slate-600">
-                {tripType === 'local'
-                  ? 'Point-to-point city transfer within Coimbatore.'
-                  : 'Single point-to-point intercity drop transfer.'}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Optional Return Date selector for Round Trip */}
-        {tripType === 'round_trip' && (
-          <div>
-            <label
-              htmlFor={`${formId}-return-date`}
-              className="block text-xs font-medium text-slate-600 mb-1"
-            >
-              Return Date (Optional — auto-calculates inclusive trip days)
-            </label>
-            <input
-              id={`${formId}-return-date`}
-              type="date"
-              min={travelDate}
-              value={returnDate}
-              onChange={(e) => {
-                setReturnDate(e.target.value);
-                setFareResult(null);
-              }}
-              className="w-full min-h-[40px] rounded-lg border border-slate-200 bg-[#FAF9F5] px-3 py-1.5 text-xs text-[#101820] focus:border-[#101820] focus:outline-none"
-            />
+            )}
           </div>
         )}
-
-        {/* Customer Name & Phone Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label
-              htmlFor={`${formId}-name`}
-              className="block text-xs font-semibold text-[#101820] mb-1"
-            >
-              Your Name
-            </label>
-            <div className="relative">
-              <User
-                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400"
-                aria-hidden="true"
-              />
-              <input
-                id={`${formId}-name`}
-                type="text"
-                required
-                value={customerName}
-                onChange={(e) => setCustomerName(e.target.value)}
-                placeholder="Full name"
-                className="w-full min-h-[44px] rounded-lg border border-slate-300 bg-white pl-9 pr-3 py-2 text-sm text-[#101820] placeholder:text-slate-400 focus:border-[#101820] focus:outline-none focus:ring-2 focus:ring-[#F5C518]/50"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label
-              htmlFor={`${formId}-phone`}
-              className="block text-xs font-semibold text-[#101820] mb-1"
-            >
-              Phone Number
-            </label>
-            <div className="relative">
-              <Phone
-                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400"
-                aria-hidden="true"
-              />
-              <input
-                id={`${formId}-phone`}
-                type="tel"
-                required
-                value={customerPhone}
-                onChange={(e) => setCustomerPhone(e.target.value)}
-                placeholder="10-digit mobile number"
-                className="w-full min-h-[44px] rounded-lg border border-slate-300 bg-white pl-9 pr-3 py-2 text-sm font-mono-tabular text-[#101820] placeholder:font-sans placeholder:text-slate-400 focus:border-[#101820] focus:outline-none focus:ring-2 focus:ring-[#F5C518]/50"
-              />
-            </div>
-          </div>
-        </div>
 
         {/* Validation Error Alert */}
         {validationError && (
           <div
             role="alert"
-            className="flex items-start gap-2.5 rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-900"
+            className="flex items-start gap-2.5 rounded-lg border border-red-200 bg-red-50 p-2.5 text-xs text-red-900"
           >
             <AlertCircle className="h-4 w-4 shrink-0 text-red-600 mt-0.5" aria-hidden="true" />
             <span>{validationError}</span>
           </div>
         )}
 
-        {/* Primary Calculate Fare Button */}
-        <button
-          type="submit"
-          disabled={isCalculating}
-          className="w-full min-h-[48px] rounded-lg bg-[#F5C518] px-5 py-3 text-sm font-bold text-[#101820] transition-colors hover:bg-[#eab808] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#101820] disabled:opacity-60 whitespace-nowrap"
-        >
-          {isCalculating ? 'Calculating Route Distance...' : 'Calculate Estimated Fare'}
-        </button>
+        {/* Exact Reassurance Row matching reference image */}
+        <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center justify-start gap-x-4 gap-y-2 text-xs text-slate-600">
+          <div className="flex items-center gap-1.5">
+            <ThumbsUp className="h-3.5 w-3.5 text-[#101820]" aria-hidden="true" />
+            <span className="font-medium">No phone number required</span>
+          </div>
+          <span className="hidden sm:inline text-slate-300" aria-hidden="true">|</span>
+          <div className="flex items-center gap-1.5">
+            <Zap className="h-3.5 w-3.5 text-[#F5C518] fill-current" aria-hidden="true" />
+            <span className="font-medium">Get instant fare</span>
+          </div>
+          <span className="hidden sm:inline text-slate-300" aria-hidden="true">|</span>
+          <div className="flex items-center gap-1.5">
+            <MessageCircle className="h-3.5 w-3.5 text-[#15803D]" aria-hidden="true" />
+            <span className="font-medium">Easy booking via WhatsApp</span>
+          </div>
+        </div>
       </form>
 
       {/* Route Resolution Fallback State ("Request a Quote" instead of guessing distance) */}
@@ -771,8 +624,26 @@ export const BookingForm: React.FC<BookingFormProps> = ({
             </p>
           )}
 
+          {/* Optional Name for WhatsApp Personalization */}
+          <div className="mt-3.5 pt-3 border-t border-slate-200">
+            <label
+              htmlFor={`${formId}-opt-name`}
+              className="block text-[11px] font-medium text-slate-600 mb-1"
+            >
+              Your Name (Optional — will be included in your WhatsApp enquiry):
+            </label>
+            <input
+              id={`${formId}-opt-name`}
+              type="text"
+              value={customerName}
+              onChange={(e) => setCustomerName(e.target.value)}
+              placeholder="e.g. Ramesh K (optional)"
+              className="w-full rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs text-[#101820] placeholder:text-slate-400 focus:border-[#101820] focus:outline-none"
+            />
+          </div>
+
           {/* WhatsApp Booking Action */}
-          <div className="mt-4 space-y-2.5">
+          <div className="mt-3 space-y-2.5">
             {hasConfirmedWhatsapp() && whatsappData.url ? (
               <a
                 href={whatsappData.url}

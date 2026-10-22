@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="240" viewBox="0 0 700 240">
+  <defs>
+    <style>
+      .bold-text { font-family: "DejaVu Sans", "Liberation Sans", Arial, sans-serif; font-weight: 900; }
+    </style>
+  </defs>
+  <!-- Yellow YG Rounded Box -->
+  <rect x="10" y="40" width="130" height="130" rx="24" fill="#F5C518" />
+  <text x="75" y="132" font-size="76" class="bold-text" fill="#101820" text-anchor="middle" letter-spacing="-3">YG</text>
+
+  <!-- Yellow Taxi Roofline Silhouette & Taxi Cap -->
+  <path d="M165 92 C 240 25, 420 25, 620 98 C 450 48, 250 48, 175 98 Z" fill="#F5C518" />
+  <path d="M 330 43 L 345 28 L 385 28 L 400 43 Z" fill="#F5C518" />
+
+  <!-- Typography -->
+  <text x="165" y="144" class="bold-text" font-size="72" letter-spacing="-1">
+    <tspan fill="#101820">Yellow</tspan><tspan fill="#F5C518">Go</tspan><tspan fill="#101820">Taxi</tspan>
+  </text>
+</svg>

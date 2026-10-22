@@ -120,8 +120,8 @@ export const ASSET_MANIFEST: Record<string, AssetSpec> = {
     aspectRatio: '4:3',
     format: 'WebP',
     criticalLcp: false,
-    recommendedSubject: 'Comfortable city sedan navigating an urban avenue in Coimbatore',
-    altTextGuidance: 'Local city taxi service in Coimbatore for point-to-point urban travel',
+    recommendedSubject: 'Brand new 2026 Maruti Suzuki Dzire sedan with Yellow Go Taxi branding on doors in Coimbatore',
+    altTextGuidance: 'Brand new 2026 Maruti Suzuki Dzire sedan with Yellow Go Taxi branding on doors for local city rides in Coimbatore',
   },
   'service-hourly.webp': {
     filename: 'service-hourly.webp',
@@ -134,8 +134,8 @@ export const ASSET_MANIFEST: Record<string, AssetSpec> = {
     aspectRatio: '4:3',
     format: 'WebP',
     criticalLcp: false,
-    recommendedSubject: 'Chauffeur-driven taxi waiting outside a business hotel or shopping district in Coimbatore',
-    altTextGuidance: 'Flexible hourly taxi rental package in Coimbatore for multi-stop city errands and business meetings',
+    recommendedSubject: '2026 Hyundai Aura sedan with Yellow Go Taxi branding on doors for flexible hourly taxi rental in Coimbatore',
+    altTextGuidance: '2026 Hyundai Aura sedan with Yellow Go Taxi branding on doors for flexible hourly taxi rental in Coimbatore',
   },
   'service-outstation.webp': {
     filename: 'service-outstation.webp',
@@ -148,8 +148,8 @@ export const ASSET_MANIFEST: Record<string, AssetSpec> = {
     aspectRatio: '4:3',
     format: 'WebP',
     criticalLcp: false,
-    recommendedSubject: 'Touring cab cruising along a palm-lined Tamil Nadu highway for an outstation drop trip',
-    altTextGuidance: 'Outstation drop taxi from Coimbatore to destinations across Tamil Nadu, Kerala, and Karnataka',
+    recommendedSubject: '2026 Maruti Suzuki Ertiga with Yellow Go Taxi branding on doors cruising on Tamil Nadu highway for outstation drop',
+    altTextGuidance: '2026 Maruti Suzuki Ertiga with Yellow Go Taxi branding on doors for outstation drop journeys from Coimbatore',
   },
   'service-round-trip.webp': {
     filename: 'service-round-trip.webp',
@@ -162,8 +162,8 @@ export const ASSET_MANIFEST: Record<string, AssetSpec> = {
     aspectRatio: '4:3',
     format: 'WebP',
     criticalLcp: false,
-    recommendedSubject: 'Spacious family SUV parked at a hill station viewpoint during a multi-day round-trip tour',
-    altTextGuidance: 'Multi-day round-trip taxi service from Coimbatore for family holidays and hill station tours',
+    recommendedSubject: 'Toyota Innova Hycross with Yellow Go Taxi branding on doors for multi-day round trips from Coimbatore',
+    altTextGuidance: 'Toyota Innova Hycross with Yellow Go Taxi branding on doors for multi-day round trips from Coimbatore',
   },
   'why-choose-us.webp': {
     filename: 'why-choose-us.webp',

@@ -42,6 +42,40 @@ const ALL_ROUTES: RouteMeta[] = [
       { name: s.title, path: s.path },
     ],
   })),
+  // Service alias routes for legacy / alternate slugs to prevent 404 on static hosting
+  {
+    routePath: '/services/coimbatore-local-taxi/',
+    title: 'Coimbatore Local Taxi Service | Point-to-Point City Rides | Yellow Go Taxi',
+    description: 'Book a Coimbatore local taxi for airport transfers, railway station pickups, hospital visits, and city point-to-point travel with clear upfront fare estimates.',
+    canonicalPath: '/services/local-taxi/',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Taxi Services', path: '/services/' },
+      { name: 'Local Taxi', path: '/services/local-taxi/' },
+    ],
+  },
+  {
+    routePath: '/services/outstation-taxi-coimbatore/',
+    title: 'Coimbatore Outstation Drop Taxi | Point-to-Point Intercity Cabs | Yellow Go Taxi',
+    description: 'Book an Outstation Drop taxi from Coimbatore to Ooty, Kodaikanal, Munnar, Palani, Valparai, Salem, or Bengaluru. Transparent point-to-point fare estimates.',
+    canonicalPath: '/services/outstation-drop/',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Taxi Services', path: '/services/' },
+      { name: 'Outstation Drop', path: '/services/outstation-drop/' },
+    ],
+  },
+  {
+    routePath: '/services/hourly-car-rental-coimbatore/',
+    title: 'Hourly Taxi Rental in Coimbatore | Flexible City Packages | Yellow Go Taxi',
+    description: 'Hire a taxi by the hour in Coimbatore for business meetings, wedding shopping, temple visits, or local sightseeing. Clear hourly package fare estimates.',
+    canonicalPath: '/services/hourly-rental/',
+    breadcrumbs: [
+      { name: 'Home', path: '/' },
+      { name: 'Taxi Services', path: '/services/' },
+      { name: 'Hourly Rental', path: '/services/hourly-rental/' },
+    ],
+  },
   {
     routePath: '/tours/',
     title: 'Coimbatore Outstation Tours & Hill Station Taxi Packages | Yellow Go Taxi',
