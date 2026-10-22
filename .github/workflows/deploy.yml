@@ -28,7 +28,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: "npm"
 
       - name: Configure Pages & Determine Base Path
         id: pages_config
@@ -41,13 +40,10 @@ jobs:
           fi
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --no-audit --no-fund
 
       - name: Build production bundle & prerender all 35 routes
         run: npm run build
-
-      - name: Copy 404.html fallback for SPA subroutes
-        run: cp dist/404/index.html dist/404.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

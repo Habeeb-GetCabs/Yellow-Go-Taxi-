@@ -27,7 +27,11 @@ export const AssetImage: React.FC<AssetImageProps> = ({
     }
   ).env;
   const isDevOrDebug = Boolean(metaEnv?.DEV || metaEnv?.VITE_ASSET_DEBUG === 'true');
-  const baseUrl = (metaEnv?.BASE_URL || '/').replace(/\/$/, '');
+  const rawBase =
+    metaEnv?.BASE_URL ||
+    (typeof process !== 'undefined' && process.env ? process.env.VITE_BASE_PATH : '') ||
+    '/';
+  const baseUrl = rawBase.replace(/\/$/, '');
   const resolvedSrc = `${baseUrl}${spec.publicPath}`;
 
   const resolvedAlt = alt || spec.altTextGuidance;
