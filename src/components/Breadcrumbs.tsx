@@ -1,4 +1,5 @@
 import React from 'react';
+import { ChevronRight } from 'lucide-react';
 import type { BreadcrumbEntry } from './SeoHead';
 
 export interface BreadcrumbsProps {
@@ -17,24 +18,27 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
   return (
     <nav aria-label="Breadcrumb" className="mb-4">
       <ol
-        className={`flex flex-wrap items-center gap-2 text-xs ${
-          lightText ? 'text-slate-300' : 'text-slate-600'
+        className={`flex flex-wrap items-center gap-1.5 text-xs font-medium ${
+          lightText ? 'text-slate-300' : 'text-[#526174]'
         }`}
       >
         {items.map((item, idx) => {
           const isLast = idx === items.length - 1;
           return (
-            <li key={item.path} className="flex items-center gap-2">
+            <li key={item.path} className="flex items-center gap-1.5">
               {idx > 0 && (
-                <span aria-hidden="true" className="opacity-60">
-                  /
-                </span>
+                <ChevronRight
+                  aria-hidden="true"
+                  className={`h-3.5 w-3.5 shrink-0 ${
+                    lightText ? 'text-slate-500' : 'text-slate-400'
+                  }`}
+                />
               )}
               {isLast ? (
                 <span
                   aria-current="page"
-                  className={`font-medium ${
-                    lightText ? 'text-white' : 'text-[#101820]'
+                  className={`font-bold ${
+                    lightText ? 'text-[#FFC400]' : 'text-[#111820]'
                   }`}
                 >
                   {item.name}
@@ -48,8 +52,8 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({
                       onNavigate(item.path);
                     }
                   }}
-                  className={`underline-offset-4 hover:underline ${
-                    lightText ? 'hover:text-[#F5C518]' : 'hover:text-[#101820]'
+                  className={`transition-colors underline-offset-4 hover:underline ${
+                    lightText ? 'text-slate-300 hover:text-[#FFC400]' : 'text-[#526174] hover:text-[#111820]'
                   }`}
                 >
                   {item.name}

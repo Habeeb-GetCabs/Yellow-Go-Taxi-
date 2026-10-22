@@ -38,7 +38,7 @@ export const ToursDirectoryPage: React.FC<ToursDirectoryPageProps> = ({ onNaviga
         ]}
       />
 
-      <section className="bg-[#101820] text-white py-12 sm:py-16 border-b border-slate-800">
+      <section className="bg-gradient-to-br from-[#111820] via-[#172536] to-[#111820] text-white py-12 sm:py-16 border-b-4 border-[#FFC400]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Breadcrumbs
             lightText
@@ -48,8 +48,11 @@ export const ToursDirectoryPage: React.FC<ToursDirectoryPageProps> = ({ onNaviga
               { name: 'Tours', path: '/tours/' },
             ]}
           />
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white text-balance">
-            Outstation Tour Destinations from Coimbatore
+          <span className="inline-block rounded-md bg-[#FFC400] px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#111820]">
+            10 Curated Outstation Packages
+          </span>
+          <h1 className="mt-3 text-3xl sm:text-5xl font-extrabold tracking-tight text-white text-balance">
+            Outstation Tour Destinations from <span className="text-[#FFC400]">Coimbatore</span>
           </h1>
           <p className="mt-3 text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed">
             Explore 10 dedicated destination guides covering the Nilgiris, Anamalai Hills, Palani
@@ -59,17 +62,21 @@ export const ToursDirectoryPage: React.FC<ToursDirectoryPageProps> = ({ onNaviga
         </div>
       </section>
 
-      <section className="py-12 sm:py-16 bg-[#FAF9F5]">
+      <section className="py-12 sm:py-16 bg-[#F7F6F1]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-10">
           {/* Interactive Filter Controls */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E2DDD2] pb-5">
-            <p className="text-sm text-slate-600">
-              Showing <span className="font-mono-tabular font-bold text-[#101820]">{filteredTours.length}</span> dedicated destination pages
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-[#D8DFE8] pb-5">
+            <p className="text-sm font-semibold text-[#263241]">
+              Showing{' '}
+              <span className="font-mono-tabular font-extrabold text-[#111820]">
+                {filteredTours.length}
+              </span>{' '}
+              dedicated destination pages
             </p>
             <div
               role="group"
               aria-label="Filter tour routes by distance"
-              className="inline-flex items-center gap-1 rounded-lg bg-[#EAE5D7] p-1 self-start"
+              className="inline-flex flex-wrap items-center gap-1.5 rounded-xl bg-white border-2 border-[#D8DFE8] p-1.5 self-start shadow-xs"
             >
               {[
                 { key: 'all', label: 'All 10 Destinations' },
@@ -80,10 +87,10 @@ export const ToursDirectoryPage: React.FC<ToursDirectoryPageProps> = ({ onNaviga
                   key={btn.key}
                   type="button"
                   onClick={() => setFilterDuration(btn.key as 'all' | 'short' | 'multi')}
-                  className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors whitespace-nowrap shrink-0 ${
+                  className={`px-3.5 py-2 text-xs font-extrabold rounded-lg transition-all whitespace-nowrap shrink-0 cursor-pointer ${
                     filterDuration === btn.key
-                      ? 'bg-white text-[#101820] shadow-xs'
-                      : 'text-slate-700 hover:text-[#101820]'
+                      ? 'bg-[#FFC400] text-[#111820] shadow-xs'
+                      : 'text-[#263241] hover:text-[#111820] hover:bg-[#F7F6F1]'
                   }`}
                 >
                   {btn.label}
@@ -97,23 +104,28 @@ export const ToursDirectoryPage: React.FC<ToursDirectoryPageProps> = ({ onNaviga
             {filteredTours.map((tour, idx) => (
               <article
                 key={tour.id}
-                className="flex flex-col rounded-xl border border-[#E2DDD2] bg-white overflow-hidden"
+                className="group flex flex-col rounded-2xl border-2 border-[#D8DFE8] hover:border-[#FFC400] bg-white overflow-hidden shadow-md hover:shadow-xl transition-all duration-200"
               >
-                <AssetImage
-                  filename={tour.imageFilename}
-                  alt={tour.imageAlt}
-                  priority={idx < 3}
-                  className="w-full border-0 border-b border-[#E2DDD2]"
-                />
+                <div className="relative overflow-hidden border-b border-[#D8DFE8]">
+                  <AssetImage
+                    filename={tour.imageFilename}
+                    alt={tour.imageAlt}
+                    priority={idx < 3}
+                    className="w-full border-0 transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute top-3 left-3 flex flex-wrap items-center gap-1.5">
+                    <span className="rounded-lg bg-[#111820]/90 border border-[#FFC400] px-2.5 py-1 font-mono-tabular text-xs font-extrabold text-[#FFC400] shadow-md">
+                      ~{tour.approxOneWayKm} km one-way
+                    </span>
+                    <span className="rounded-lg bg-white/95 px-2.5 py-1 text-xs font-extrabold text-[#111820] shadow-md">
+                      {tour.recommendedDuration}
+                    </span>
+                  </div>
+                </div>
+
                 <div className="flex flex-1 flex-col justify-between p-6">
                   <div>
-                    <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
-                      <span className="font-mono-tabular">~{tour.approxOneWayKm} km one-way</span>
-                      <span aria-hidden="true">·</span>
-                      <span>{tour.recommendedDuration}</span>
-                    </div>
-
-                    <h2 className="mt-2 text-xl font-bold text-[#101820]">
+                    <h2 className="text-xl font-extrabold text-[#111820]">
                       <a
                         href={tour.path}
                         onClick={(e) => handleLink(e, tour.path)}
@@ -123,23 +135,23 @@ export const ToursDirectoryPage: React.FC<ToursDirectoryPageProps> = ({ onNaviga
                       </a>
                     </h2>
 
-                    <p className="mt-2 text-sm text-slate-600 leading-relaxed">
+                    <p className="mt-2.5 text-sm text-[#263241] leading-relaxed">
                       {tour.introParagraphs[0]}
                     </p>
                   </div>
 
-                  <div className="mt-5 pt-4 border-t border-slate-100 space-y-3">
-                    <p className="flex items-center gap-1.5 text-xs text-slate-500">
-                      <MapPin className="h-3.5 w-3.5 shrink-0 text-slate-400" aria-hidden="true" />
+                  <div className="mt-6 pt-4 border-t border-[#D8DFE8] space-y-3.5">
+                    <p className="flex items-center gap-1.5 text-xs font-semibold text-[#526174]">
+                      <MapPin className="h-3.5 w-3.5 shrink-0 text-[#F5B800]" aria-hidden="true" />
                       <span className="truncate">{tour.routeCorridor}</span>
                     </p>
                     <a
                       href={tour.path}
                       onClick={(e) => handleLink(e, tour.path)}
-                      className="inline-flex w-full min-h-[42px] items-center justify-center gap-2 rounded-lg bg-[#101820] px-4 py-2 text-xs font-bold text-[#F5C518] hover:bg-slate-800 whitespace-nowrap"
+                      className="inline-flex w-full min-h-[44px] items-center justify-center gap-2 rounded-xl bg-[#FFC400] hover:bg-[#F5B800] px-4 py-2.5 text-xs font-extrabold text-[#111820] shadow-xs transition-colors whitespace-nowrap"
                     >
                       <span>Open {tour.destinationName} Route Guide</span>
-                      <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                      <ArrowRight className="h-4 w-4 stroke-[2.5]" aria-hidden="true" />
                     </a>
                   </div>
                 </div>
@@ -148,12 +160,15 @@ export const ToursDirectoryPage: React.FC<ToursDirectoryPageProps> = ({ onNaviga
           </div>
 
           {/* Bottom Calculator Section */}
-          <div className="mt-14 pt-10 border-t border-[#E2DDD2] grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div className="mt-14 pt-10 border-t-2 border-[#D8DFE8] grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             <div className="lg:col-span-5 space-y-3">
-              <h2 className="text-2xl font-extrabold text-[#101820]">
+              <span className="inline-block rounded-md bg-[#111820] px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#FFC400]">
+                Instant Tour Fare Calculator
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#111820]">
                 Estimate Any Outstation Tour Fare
               </h2>
-              <p className="text-sm text-slate-600 leading-relaxed">
+              <p className="text-sm sm:text-base text-[#263241] leading-relaxed">
                 Select Outstation Drop for a direct one-way transfer, or Round Trip for a multi-day
                 return journey from Coimbatore.
               </p>
@@ -164,6 +179,8 @@ export const ToursDirectoryPage: React.FC<ToursDirectoryPageProps> = ({ onNaviga
                 initialPickup="Coimbatore International Airport (CJB)"
                 initialDrop="Ooty (Udhagamandalam)"
                 initialDays={3}
+                heading="Calculate Outstation Tour Fare"
+                subheading="Pre-filled for Coimbatore to Ooty. Change pickup or destination anytime."
               />
             </div>
           </div>

@@ -2,13 +2,30 @@
 
 @layer base {
   :root {
-    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-sans: 'Plus Jakarta Sans', 'Noto Sans Tamil', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'JetBrains Mono', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --brand-yellow: #FFC400;
+    --taxi-yellow: #F5B800;
+    --deep-charcoal: #111820;
+    --dark-navy: #172536;
+    --warm-offwhite: #F7F6F1;
+    --body-text: #263241;
+    --secondary-text: #526174;
+    --border-color: #D8DFE8;
+    --success-green: #138443;
   }
 
   html {
     font-family: var(--font-sans);
     scroll-behavior: smooth;
+    color: #263241;
+    background-color: #F7F6F1;
+  }
+
+  body {
+    color: #263241;
+    background-color: #F7F6F1;
+    overflow-x: hidden;
   }
 
   @media (prefers-reduced-motion: reduce) {

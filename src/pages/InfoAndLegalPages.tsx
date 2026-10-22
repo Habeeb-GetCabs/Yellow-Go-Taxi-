@@ -8,6 +8,7 @@ import {
   AlertCircle,
   ChevronDown,
   ArrowRight,
+  MessageCircle,
 } from 'lucide-react';
 import { SeoHead } from '../components/SeoHead';
 import { Breadcrumbs } from '../components/Breadcrumbs';
@@ -54,7 +55,7 @@ export const AboutPage: React.FC<PageNavProps> = ({ onNavigate }) => {
         ]}
       />
 
-      <section className="bg-[#101820] text-white py-12 sm:py-16 border-b border-slate-800">
+      <section className="bg-gradient-to-br from-[#111820] via-[#172536] to-[#111820] text-white py-12 sm:py-16 border-b-4 border-[#FFC400]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Breadcrumbs
             lightText
@@ -64,8 +65,11 @@ export const AboutPage: React.FC<PageNavProps> = ({ onNavigate }) => {
               { name: 'About Us', path: '/about/' },
             ]}
           />
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-            About {business.name}
+          <span className="inline-block rounded-md bg-[#FFC400] px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#111820]">
+            Coimbatore’s Trusted Fleet
+          </span>
+          <h1 className="mt-3 text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
+            About <span className="text-[#FFC400]">{business.name}</span>
           </h1>
           <p className="mt-3 text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed">
             A dedicated local and outstation taxi service planned for {business.city},{' '}
@@ -75,39 +79,39 @@ export const AboutPage: React.FC<PageNavProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      <section className="py-12 sm:py-16 bg-[#FAF9F5]">
+      <section className="py-12 sm:py-16 bg-[#F7F6F1]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-12">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            <div className="lg:col-span-6 space-y-4">
-              <h2 className="text-2xl font-bold text-[#101820]">
+            <div className="lg:col-span-6 space-y-5">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#111820]">
                 Designed Around Clear Trip Planning
               </h2>
-              <p className="text-sm sm:text-base text-slate-700 leading-relaxed">
+              <p className="text-sm sm:text-base text-[#263241] leading-relaxed">
                 {business.name} was created to simplify how passengers in {business.city} plan city
                 transfers, hourly errands, point-to-point intercity drops, and multi-day hill
                 station tours across the Western and Eastern Ghats.
               </p>
-              <p className="text-sm sm:text-base text-slate-700 leading-relaxed">
+              <p className="text-sm sm:text-base text-[#263241] leading-relaxed">
                 Instead of requiring customers to guess which package applies to their journey, our
                 platform separates bookings into four clear modes—Local, Hourly Rental, Outstation
                 Drop, and Round Trip—and provides an instant route-based fare estimate before you
                 submit your booking enquiry.
               </p>
 
-              <div className="rounded-xl border border-[#E2DDD2] bg-white p-5 space-y-3 text-xs sm:text-sm text-slate-600">
-                <p className="font-bold text-[#101820]">
+              <div className="rounded-2xl border-2 border-[#D8DFE8] bg-white p-5 sm:p-6 space-y-3.5 text-xs sm:text-sm text-[#263241] shadow-sm">
+                <p className="font-extrabold text-[#111820] text-base">
                   Base Location &amp; Coimbatore Operating Hubs
                 </p>
                 <p>
-                  <strong>Primary Base:</strong> {business.address} ({business.phone})
+                  <strong className="text-[#111820]">Primary Base:</strong> {business.address} ({business.phone})
                 </p>
                 <div>
-                  <p className="font-semibold text-[#101820] mb-1.5">Active Pickup &amp; Dispatch Hubs:</p>
+                  <p className="font-extrabold text-[#111820] mb-2">Active Pickup &amp; Dispatch Hubs:</p>
                   <div className="flex flex-wrap gap-1.5">
                     {business.operatingHubs.map((hub) => (
                       <span
                         key={hub}
-                        className="rounded-md border border-[#E2DDD2] bg-[#FAF9F5] px-2.5 py-1 text-xs font-medium text-[#101820]"
+                        className="rounded-lg border border-[#D8DFE8] bg-[#F7F6F1] px-3 py-1 text-xs font-bold text-[#111820]"
                       >
                         {hub}
                       </span>
@@ -118,26 +122,28 @@ export const AboutPage: React.FC<PageNavProps> = ({ onNavigate }) => {
             </div>
 
             <div className="lg:col-span-6">
-              <AssetImage
-                filename="why-choose-us.webp"
-                alt="Clean, comfortable interior of a Yellow Go Taxi vehicle prepared for passenger travel"
-                priority={true}
-                className="w-full rounded-xl"
-              />
+              <div className="rounded-2xl overflow-hidden border-2 border-[#FFC400] shadow-xl bg-[#111820]">
+                <AssetImage
+                  filename="why-choose-us.webp"
+                  alt="Clean, comfortable interior of a Yellow Go Taxi vehicle prepared for passenger travel"
+                  priority={true}
+                  className="w-full border-0"
+                />
+              </div>
             </div>
           </div>
 
           {/* Quick Links to Services & Tours */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-[#E2DDD2]">
-            <div className="rounded-xl border border-[#E2DDD2] bg-white p-6 space-y-3">
-              <h2 className="text-lg font-bold text-[#101820]">Explore Our Four Service Modes</h2>
-              <ul className="space-y-2 text-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t-2 border-[#D8DFE8]">
+            <div className="rounded-2xl border-2 border-[#D8DFE8] bg-white p-6 space-y-3.5 shadow-sm">
+              <h2 className="text-lg font-extrabold text-[#111820]">Explore Our Four Service Modes</h2>
+              <ul className="space-y-2.5 text-sm">
                 {TAXI_SERVICES.map((svc) => (
                   <li key={svc.id}>
                     <a
                       href={svc.path}
                       onClick={(e) => handleLink(e, svc.path)}
-                      className="font-semibold text-[#101820] hover:underline"
+                      className="font-bold text-[#111820] hover:text-[#F5B800] hover:underline"
                     >
                       {svc.title} — {svc.shortDescription}
                     </a>
@@ -146,15 +152,15 @@ export const AboutPage: React.FC<PageNavProps> = ({ onNavigate }) => {
               </ul>
             </div>
 
-            <div className="rounded-xl border border-[#E2DDD2] bg-white p-6 space-y-3">
-              <h2 className="text-lg font-bold text-[#101820]">Explore Our 10 Tour Routes</h2>
-              <div className="grid grid-cols-2 gap-2 text-xs sm:text-sm">
+            <div className="rounded-2xl border-2 border-[#D8DFE8] bg-white p-6 space-y-3.5 shadow-sm">
+              <h2 className="text-lg font-extrabold text-[#111820]">Explore Our 10 Tour Routes</h2>
+              <div className="grid grid-cols-2 gap-2.5 text-xs sm:text-sm">
                 {TOUR_PAGES.map((tour) => (
                   <a
                     key={tour.id}
                     href={tour.path}
                     onClick={(e) => handleLink(e, tour.path)}
-                    className="font-medium text-slate-700 hover:text-[#101820] underline"
+                    className="font-bold text-[#263241] hover:text-[#111820] underline"
                   >
                     Coimbatore to {tour.destinationName}
                   </a>
@@ -213,7 +219,7 @@ export const ContactPage: React.FC<PageNavProps> = ({ onNavigate }) => {
         ]}
       />
 
-      <section className="bg-[#101820] text-white py-12 sm:py-16 border-b border-slate-800">
+      <section className="bg-gradient-to-br from-[#111820] via-[#172536] to-[#111820] text-white py-12 sm:py-16 border-b-4 border-[#FFC400]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <Breadcrumbs
             lightText
@@ -223,8 +229,11 @@ export const ContactPage: React.FC<PageNavProps> = ({ onNavigate }) => {
               { name: 'Contact Us', path: '/contact/' },
             ]}
           />
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-            Contact {business.name}
+          <span className="inline-block rounded-md bg-[#FFC400] px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#111820]">
+            24/7 Coimbatore Dispatch
+          </span>
+          <h1 className="mt-3 text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
+            Contact <span className="text-[#FFC400]">{business.name}</span>
           </h1>
           <p className="mt-3 text-base sm:text-lg text-slate-300 max-w-2xl leading-relaxed">
             Use our instant fare calculator, send a general trip enquiry, or review our configured
@@ -233,37 +242,46 @@ export const ContactPage: React.FC<PageNavProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      <section className="py-12 sm:py-16 bg-[#FAF9F5]">
+      <section className="py-12 sm:py-16 bg-[#F7F6F1]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
             {/* Left Column: Configurable Contact Details + General Enquiry Form */}
             <div className="lg:col-span-6 space-y-6">
-              <div className="rounded-xl border border-[#E2DDD2] bg-white p-6 space-y-4">
-                <h2 className="text-xl font-bold text-[#101820]">Dispatch, Address &amp; Operating Hubs</h2>
-                <p className="text-xs text-slate-500">
-                  Direct booking and dispatch support across {business.city} and surrounding South
-                  India outstation corridors.
-                </p>
+              <div className="rounded-2xl border-2 border-[#D8DFE8] bg-white p-6 sm:p-7 space-y-5 shadow-sm">
+                <div>
+                  <h2 className="text-xl font-extrabold text-[#111820]">
+                    Dispatch, Address &amp; Operating Hubs
+                  </h2>
+                  <p className="text-xs font-medium text-[#526174] mt-1">
+                    Direct booking and dispatch support across {business.city} and surrounding South
+                    India outstation corridors.
+                  </p>
+                </div>
 
                 <div className="space-y-4 pt-2 text-sm">
-                  <div className="flex items-start gap-3">
-                    <MapPin className="h-4 w-4 text-[#101820] shrink-0 mt-1" aria-hidden="true" />
+                  <div className="flex items-start gap-3.5">
+                    <div className="w-9 h-9 rounded-xl bg-[#FFC400] text-[#111820] flex items-center justify-center shrink-0 mt-0.5">
+                      <MapPin className="h-5 w-5 stroke-[2.3]" aria-hidden="true" />
+                    </div>
                     <div>
-                      <p className="font-bold text-[#101820]">Office &amp; Primary Base Address</p>
-                      <p className="text-slate-700 font-medium">
+                      <p className="font-extrabold text-[#111820]">Office &amp; Primary Base Address</p>
+                      <p className="text-[#263241] font-semibold">
                         {hasConfirmedAddress() ? business.address : `${business.city}, ${business.state}`}
                       </p>
-                      <p className="text-xs text-slate-500 mt-1">
-                        <strong>Operating Hubs:</strong> {business.operatingHubs.join(' · ')}
+                      <p className="text-xs text-[#526174] mt-1">
+                        <strong className="text-[#111820]">Operating Hubs:</strong>{' '}
+                        {business.operatingHubs.join(' · ')}
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-3">
-                    <Phone className="h-4 w-4 text-[#101820] shrink-0 mt-1" aria-hidden="true" />
+                  <div className="flex items-start gap-3.5">
+                    <div className="w-9 h-9 rounded-xl bg-[#FFC400] text-[#111820] flex items-center justify-center shrink-0 mt-0.5">
+                      <Phone className="h-5 w-5 stroke-[2.3]" aria-hidden="true" />
+                    </div>
                     <div>
-                      <p className="font-bold text-[#101820]">Call &amp; WhatsApp Booking</p>
-                      <p className="text-slate-700 font-mono-tabular font-semibold">
+                      <p className="font-extrabold text-[#111820]">Call &amp; WhatsApp Booking</p>
+                      <p className="text-[#111820] font-mono-tabular font-extrabold">
                         {hasConfirmedPhone() ? (
                           <a
                             href={`tel:${business.phone.replace(/\s+/g, '')}`}
@@ -276,16 +294,17 @@ export const ContactPage: React.FC<PageNavProps> = ({ onNavigate }) => {
                           'Telephone number pending owner configuration'
                         )}
                       </p>
-                      <p className="text-xs text-emerald-700 font-semibold mt-1">
+                      <p className="text-xs text-[#138443] font-extrabold mt-1">
                         {hasConfirmedWhatsapp() ? (
                           <a
                             href={`https://wa.me/${business.whatsapp.replace(/[^\d]/g, '')}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={() => trackEvent('whatsapp_click', { location: 'contact_page' })}
-                            className="hover:underline"
+                            className="inline-flex items-center gap-1 hover:underline"
                           >
-                            WhatsApp Dispatch: +91 99943 53722 (Click to Chat)
+                            <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" />
+                            <span>WhatsApp Dispatch: +91 99943 53722 (Click to Chat)</span>
                           </a>
                         ) : (
                           'WhatsApp number pending owner configuration'
@@ -295,21 +314,25 @@ export const ContactPage: React.FC<PageNavProps> = ({ onNavigate }) => {
                   </div>
 
                   {hasConfirmedEmail() && (
-                    <div className="flex items-start gap-3">
-                      <Mail className="h-4 w-4 text-[#101820] shrink-0 mt-1" aria-hidden="true" />
+                    <div className="flex items-start gap-3.5">
+                      <div className="w-9 h-9 rounded-xl bg-[#FFC400] text-[#111820] flex items-center justify-center shrink-0 mt-0.5">
+                        <Mail className="h-5 w-5 stroke-[2.3]" aria-hidden="true" />
+                      </div>
                       <div>
-                        <p className="font-bold text-[#101820]">Email Address</p>
-                        <p className="text-slate-600">{business.email}</p>
+                        <p className="font-extrabold text-[#111820]">Email Address</p>
+                        <p className="text-[#263241]">{business.email}</p>
                       </div>
                     </div>
                   )}
 
                   {hasConfirmedHours() && (
-                    <div className="flex items-start gap-3">
-                      <Clock className="h-4 w-4 text-[#101820] shrink-0 mt-1" aria-hidden="true" />
+                    <div className="flex items-start gap-3.5">
+                      <div className="w-9 h-9 rounded-xl bg-[#FFC400] text-[#111820] flex items-center justify-center shrink-0 mt-0.5">
+                        <Clock className="h-5 w-5 stroke-[2.3]" aria-hidden="true" />
+                      </div>
                       <div>
-                        <p className="font-bold text-[#101820]">Operating Hours</p>
-                        <p className="text-slate-600">{business.operatingHours}</p>
+                        <p className="font-extrabold text-[#111820]">Operating Hours</p>
+                        <p className="text-[#263241] font-semibold">{business.operatingHours}</p>
                       </div>
                     </div>
                   )}
@@ -317,9 +340,9 @@ export const ContactPage: React.FC<PageNavProps> = ({ onNavigate }) => {
               </div>
 
               {/* General Enquiry Form */}
-              <div className="rounded-xl border border-[#E2DDD2] bg-white p-6 space-y-4">
-                <h2 className="text-xl font-bold text-[#101820]">Send a Custom Trip Enquiry</h2>
-                <p className="text-xs sm:text-sm text-slate-600">
+              <div className="rounded-2xl border-2 border-[#D8DFE8] bg-white p-6 sm:p-7 space-y-4 shadow-sm">
+                <h2 className="text-xl font-extrabold text-[#111820]">Send a Custom Trip Enquiry</h2>
+                <p className="text-xs sm:text-sm text-[#526174]">
                   Have a custom multi-city itinerary or group requirement? Prepare your enquiry
                   below.
                 </p>
@@ -329,7 +352,7 @@ export const ContactPage: React.FC<PageNavProps> = ({ onNavigate }) => {
                     <div>
                       <label
                         htmlFor={`${formId}-contact-name`}
-                        className="block text-xs font-semibold text-[#101820] mb-1"
+                        className="block text-xs sm:text-sm font-extrabold text-[#111820] mb-1.5"
                       >
                         Your Name
                       </label>
@@ -340,14 +363,14 @@ export const ContactPage: React.FC<PageNavProps> = ({ onNavigate }) => {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Full name"
-                        className="w-full min-h-[44px] rounded-lg border border-slate-300 px-3 py-2 text-sm text-[#101820]"
+                        className="w-full min-h-[46px] rounded-xl border-2 border-[#D8DFE8] bg-white px-3.5 py-2 text-sm font-semibold text-[#111820] focus:border-[#111820] focus:outline-none focus:ring-3 focus:ring-[#FFC400]/40"
                       />
                     </div>
 
                     <div>
                       <label
                         htmlFor={`${formId}-contact-phone`}
-                        className="block text-xs font-semibold text-[#101820] mb-1"
+                        className="block text-xs sm:text-sm font-extrabold text-[#111820] mb-1.5"
                       >
                         Phone Number
                       </label>
@@ -358,14 +381,14 @@ export const ContactPage: React.FC<PageNavProps> = ({ onNavigate }) => {
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         placeholder="10-digit mobile number"
-                        className="w-full min-h-[44px] rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono-tabular text-[#101820]"
+                        className="w-full min-h-[46px] rounded-xl border-2 border-[#D8DFE8] bg-white px-3.5 py-2 text-sm font-mono-tabular font-semibold text-[#111820] focus:border-[#111820] focus:outline-none focus:ring-3 focus:ring-[#FFC400]/40"
                       />
                     </div>
 
                     <div>
                       <label
                         htmlFor={`${formId}-contact-details`}
-                        className="block text-xs font-semibold text-[#101820] mb-1"
+                        className="block text-xs sm:text-sm font-extrabold text-[#111820] mb-1.5"
                       >
                         Route &amp; Travel Requirements
                       </label>
@@ -376,14 +399,14 @@ export const ContactPage: React.FC<PageNavProps> = ({ onNavigate }) => {
                         value={tripDetails}
                         onChange={(e) => setTripDetails(e.target.value)}
                         placeholder="Share pickup point, destinations, dates, and number of passengers"
-                        className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-[#101820]"
+                        className="w-full rounded-xl border-2 border-[#D8DFE8] bg-white px-3.5 py-2 text-sm font-semibold text-[#111820] focus:border-[#111820] focus:outline-none focus:ring-3 focus:ring-[#FFC400]/40"
                       />
                     </div>
 
                     {error && (
                       <div
                         role="alert"
-                        className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-900"
+                        className="flex items-center gap-2 rounded-xl border-2 border-red-300 bg-red-50 p-3 text-xs font-bold text-red-900"
                       >
                         <AlertCircle className="h-4 w-4 text-red-600 shrink-0" aria-hidden="true" />
                         <span>{error}</span>
@@ -392,7 +415,7 @@ export const ContactPage: React.FC<PageNavProps> = ({ onNavigate }) => {
 
                     <button
                       type="submit"
-                      className="min-h-[46px] rounded-lg bg-[#101820] px-6 py-2.5 text-sm font-bold text-[#F5C518] hover:bg-slate-800 whitespace-nowrap"
+                      className="min-h-[48px] rounded-xl bg-[#FFC400] hover:bg-[#F5B800] px-6 py-2.5 text-sm font-extrabold text-[#111820] shadow-md transition-colors whitespace-nowrap cursor-pointer"
                     >
                       Prepare Custom Enquiry
                     </button>
@@ -400,10 +423,10 @@ export const ContactPage: React.FC<PageNavProps> = ({ onNavigate }) => {
                 ) : (
                   <div
                     role="status"
-                    className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-xs sm:text-sm text-emerald-950 space-y-3"
+                    className="rounded-xl border-2 border-emerald-300 bg-emerald-50 p-4 text-xs sm:text-sm text-emerald-950 space-y-3"
                   >
-                    <div className="flex items-center gap-2 font-bold">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-700" aria-hidden="true" />
+                    <div className="flex items-center gap-2 font-extrabold">
+                      <CheckCircle2 className="h-4 w-4 text-[#138443]" aria-hidden="true" />
                       <span>Enquiry Ready for Dispatch</span>
                     </div>
                     <p>
@@ -417,7 +440,7 @@ export const ContactPage: React.FC<PageNavProps> = ({ onNavigate }) => {
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex min-h-[40px] items-center justify-center rounded-lg bg-[#15803D] px-4 py-2 text-xs font-bold text-white hover:bg-[#166534]"
+                        className="inline-flex min-h-[42px] items-center justify-center rounded-xl bg-[#138443] px-4 py-2 text-xs font-extrabold text-white hover:bg-[#0f6b36]"
                       >
                         Send via WhatsApp (99943 53722)
                       </a>
@@ -429,7 +452,7 @@ export const ContactPage: React.FC<PageNavProps> = ({ onNavigate }) => {
                           setPhone('');
                           setTripDetails('');
                         }}
-                        className="text-xs font-bold underline text-emerald-900"
+                        className="text-xs font-extrabold underline text-emerald-900"
                       >
                         Submit Another Enquiry
                       </button>
@@ -478,7 +501,7 @@ export const FaqPage: React.FC<PageNavProps> = ({ onNavigate }) => {
         ]}
       />
 
-      <section className="bg-[#101820] text-white py-12 sm:py-16 border-b border-slate-800">
+      <section className="bg-gradient-to-br from-[#111820] via-[#172536] to-[#111820] text-white py-12 sm:py-16 border-b-4 border-[#FFC400]">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <Breadcrumbs
             lightText
@@ -488,8 +511,11 @@ export const FaqPage: React.FC<PageNavProps> = ({ onNavigate }) => {
               { name: 'FAQs', path: '/faq/' },
             ]}
           />
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-            Frequently Asked Questions
+          <span className="inline-block rounded-md bg-[#FFC400] px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#111820]">
+            Booking &amp; Tariff Help
+          </span>
+          <h1 className="mt-3 text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
+            Frequently Asked <span className="text-[#FFC400]">Questions</span>
           </h1>
           <p className="mt-3 text-base sm:text-lg text-slate-300 leading-relaxed">
             Clear answers regarding our four taxi booking modes, route distance calculation,
@@ -498,9 +524,9 @@ export const FaqPage: React.FC<PageNavProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      <section className="py-12 sm:py-16 bg-[#FAF9F5]">
+      <section className="py-12 sm:py-16 bg-[#F7F6F1]">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="divide-y divide-slate-200 rounded-xl border border-[#E2DDD2] bg-white">
+          <div className="divide-y divide-[#D8DFE8] rounded-2xl border-2 border-[#D8DFE8] bg-white overflow-hidden shadow-sm">
             {GENERAL_FAQS.map((faq, idx) => {
               const isOpen = openIdx === idx;
               return (
@@ -509,18 +535,26 @@ export const FaqPage: React.FC<PageNavProps> = ({ onNavigate }) => {
                     type="button"
                     aria-expanded={isOpen}
                     onClick={() => setOpenIdx(isOpen ? null : idx)}
-                    className="flex w-full items-center justify-between gap-4 text-left text-base font-bold text-[#101820]"
+                    className="flex w-full items-center justify-between gap-4 text-left text-base font-extrabold text-[#111820] cursor-pointer"
                   >
                     <span>{faq.question}</span>
-                    <ChevronDown
-                      className={`h-4 w-4 shrink-0 transition-transform duration-150 ${
-                        isOpen ? 'rotate-180' : ''
+                    <span
+                      className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 transition-colors ${
+                        isOpen
+                          ? 'bg-[#FFC400] text-[#111820]'
+                          : 'bg-[#F7F6F1] text-[#111820] border border-[#D8DFE8]'
                       }`}
-                      aria-hidden="true"
-                    />
+                    >
+                      <ChevronDown
+                        className={`h-4 w-4 transition-transform duration-150 ${
+                          isOpen ? 'rotate-180' : ''
+                        }`}
+                        aria-hidden="true"
+                      />
+                    </span>
                   </button>
                   {isOpen && (
-                    <p className="mt-3 text-sm sm:text-base text-slate-600 leading-relaxed">
+                    <p className="mt-3 text-sm sm:text-base text-[#263241] leading-relaxed">
                       {faq.answer}
                     </p>
                   )}
@@ -529,10 +563,10 @@ export const FaqPage: React.FC<PageNavProps> = ({ onNavigate }) => {
             })}
           </div>
 
-          <div className="rounded-xl border border-[#E2DDD2] bg-white p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="rounded-2xl border-2 border-[#FFC400] bg-[#111820] text-white p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xl">
             <div>
-              <h2 className="text-base font-bold text-[#101820]">Ready to Estimate Your Trip?</h2>
-              <p className="text-xs sm:text-sm text-slate-600">
+              <h2 className="text-lg font-extrabold text-white">Ready to Estimate Your Trip?</h2>
+              <p className="text-xs sm:text-sm text-slate-300 mt-1">
                 Return to our trip calculator or browse our 10 dedicated destination guides.
               </p>
             </div>
@@ -540,14 +574,14 @@ export const FaqPage: React.FC<PageNavProps> = ({ onNavigate }) => {
               <a
                 href="/"
                 onClick={(e) => handleLink(e, '/')}
-                className="inline-flex min-h-[42px] items-center justify-center rounded-lg bg-[#F5C518] px-4 py-2 text-xs font-bold text-[#101820] whitespace-nowrap"
+                className="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-[#FFC400] hover:bg-[#F5B800] px-5 py-2.5 text-xs font-extrabold text-[#111820] whitespace-nowrap"
               >
                 Open Fare Calculator
               </a>
               <a
                 href="/tours/"
                 onClick={(e) => handleLink(e, '/tours/')}
-                className="inline-flex min-h-[42px] items-center justify-center rounded-lg border border-slate-300 px-4 py-2 text-xs font-bold text-[#101820] whitespace-nowrap"
+                className="inline-flex min-h-[44px] items-center justify-center rounded-xl border-2 border-white/25 bg-white/8 px-5 py-2.5 text-xs font-extrabold text-white hover:border-[#FFC400] whitespace-nowrap"
               >
                 Browse Tours
               </a>
@@ -575,7 +609,7 @@ export const PrivacyPolicyPage: React.FC<PageNavProps> = ({ onNavigate }) => {
         ]}
       />
 
-      <section className="bg-[#101820] text-white py-10 sm:py-14 border-b border-slate-800">
+      <section className="bg-gradient-to-br from-[#111820] via-[#172536] to-[#111820] text-white py-10 sm:py-14 border-b-4 border-[#FFC400]">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <Breadcrumbs
             lightText
@@ -585,7 +619,9 @@ export const PrivacyPolicyPage: React.FC<PageNavProps> = ({ onNavigate }) => {
               { name: 'Privacy Policy', path: '/privacy-policy/' },
             ]}
           />
-          <h1 className="text-3xl font-extrabold tracking-tight text-white">Privacy Policy</h1>
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+            Privacy Policy
+          </h1>
           <p className="mt-2 text-xs sm:text-sm text-slate-300">
             Configurable Policy Template — Requires Owner Review &amp; Final Approval Before Live
             Launch
@@ -593,17 +629,18 @@ export const PrivacyPolicyPage: React.FC<PageNavProps> = ({ onNavigate }) => {
         </div>
       </section>
 
-      <section className="py-12 bg-[#FAF9F5]">
+      <section className="py-12 bg-[#F7F6F1]">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-xl border border-[#E2DDD2] bg-white p-6 sm:p-10 space-y-6 text-sm sm:text-base text-slate-700 leading-relaxed">
-            <div className="rounded-lg border border-amber-300 bg-[#FFFDF5] p-4 text-xs text-slate-700">
-              <strong>Owner Approval Notice:</strong> Sections regarding data retention periods,
-              official grievance contact email, and third-party analytics/advertising processors
-              must be reviewed and confirmed by the business owner before connecting live campaigns.
+          <div className="rounded-2xl border-2 border-[#D8DFE8] bg-white p-6 sm:p-10 space-y-6 text-sm sm:text-base text-[#263241] leading-relaxed shadow-sm">
+            <div className="rounded-xl border-2 border-[#FFC400] bg-[#F7F6F1] p-4 text-xs text-[#263241]">
+              <strong className="text-[#111820]">Owner Approval Notice:</strong> Sections regarding
+              data retention periods, official grievance contact email, and third-party
+              analytics/advertising processors must be reviewed and confirmed by the business owner
+              before connecting live campaigns.
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-lg font-bold text-[#101820]">
+              <h2 className="text-lg font-extrabold text-[#111820]">
                 1. Information Collected Through Booking &amp; Contact Forms
               </h2>
               <p>
@@ -619,7 +656,7 @@ export const PrivacyPolicyPage: React.FC<PageNavProps> = ({ onNavigate }) => {
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-lg font-bold text-[#101820]">
+              <h2 className="text-lg font-extrabold text-[#111820]">
                 2. How We Use Your Booking Enquiry Information
               </h2>
               <p>
@@ -631,12 +668,10 @@ export const PrivacyPolicyPage: React.FC<PageNavProps> = ({ onNavigate }) => {
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-lg font-bold text-[#101820]">
+              <h2 className="text-lg font-extrabold text-[#111820]">
                 3. Mapping, Analytics &amp; Advertising Technologies
               </h2>
-              <p>
-                When configured by the website owner, this website may use:
-              </p>
+              <p>When configured by the website owner, this website may use:</p>
               <ul className="list-disc list-inside space-y-1">
                 <li>
                   <strong>Route &amp; Geocoding Services:</strong> To resolve road distances between
@@ -652,11 +687,12 @@ export const PrivacyPolicyPage: React.FC<PageNavProps> = ({ onNavigate }) => {
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-lg font-bold text-[#101820]">4. Contact for Privacy Requests</h2>
+              <h2 className="text-lg font-extrabold text-[#111820]">
+                4. Contact for Privacy Requests
+              </h2>
               <p>
                 For questions regarding your personal data, please contact {business.name} via the
-                official email or telephone number published on our Contact Us page (currently
-                pending owner configuration in <code className="font-mono text-xs">src/config/business.ts</code>).
+                official email or telephone number published on our Contact Us page.
               </p>
             </div>
           </div>
@@ -682,7 +718,7 @@ export const TermsAndConditionsPage: React.FC<PageNavProps> = ({ onNavigate }) =
         ]}
       />
 
-      <section className="bg-[#101820] text-white py-10 sm:py-14 border-b border-slate-800">
+      <section className="bg-gradient-to-br from-[#111820] via-[#172536] to-[#111820] text-white py-10 sm:py-14 border-b-4 border-[#FFC400]">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <Breadcrumbs
             lightText
@@ -692,7 +728,7 @@ export const TermsAndConditionsPage: React.FC<PageNavProps> = ({ onNavigate }) =
               { name: 'Terms & Conditions', path: '/terms-and-conditions/' },
             ]}
           />
-          <h1 className="text-3xl font-extrabold tracking-tight text-white">
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
             Terms &amp; Conditions
           </h1>
           <p className="mt-2 text-xs sm:text-sm text-slate-300">
@@ -702,18 +738,18 @@ export const TermsAndConditionsPage: React.FC<PageNavProps> = ({ onNavigate }) =
         </div>
       </section>
 
-      <section className="py-12 bg-[#FAF9F5]">
+      <section className="py-12 bg-[#F7F6F1]">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-xl border border-[#E2DDD2] bg-white p-6 sm:p-10 space-y-6 text-sm sm:text-base text-slate-700 leading-relaxed">
-            <div className="rounded-lg border border-amber-300 bg-[#FFFDF5] p-4 text-xs text-slate-700">
-              <strong>Owner Approval Notice:</strong> Tariff inclusions, partial-hour rounding
-              rules, waiting charges, and statutory fee handling must be approved by the owner of{' '}
-              {business.name} prior to commercial launch. Current tariff status:{' '}
-              {fareConfig.requiresOwnerApproval ? 'Pending Owner Approval' : 'Approved'}.
+          <div className="rounded-2xl border-2 border-[#D8DFE8] bg-white p-6 sm:p-10 space-y-6 text-sm sm:text-base text-[#263241] leading-relaxed shadow-sm">
+            <div className="rounded-xl border-2 border-[#FFC400] bg-[#F7F6F1] p-4 text-xs text-[#263241]">
+              <strong className="text-[#111820]">Owner Approval Notice:</strong> Tariff inclusions,
+              partial-hour rounding rules, waiting charges, and statutory fee handling must be
+              approved by the owner of {business.name} prior to commercial launch. Current tariff
+              status: {fareConfig.requiresOwnerApproval ? 'Pending Owner Approval' : 'Approved'}.
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-lg font-bold text-[#101820]">
+              <h2 className="text-lg font-extrabold text-[#111820]">
                 1. Online Fare Estimates vs. Final Confirmed Quotes
               </h2>
               <p>
@@ -726,7 +762,7 @@ export const TermsAndConditionsPage: React.FC<PageNavProps> = ({ onNavigate }) =
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-lg font-bold text-[#101820]">
+              <h2 className="text-lg font-extrabold text-[#111820]">
                 2. Tolls, Permits, Parking &amp; Statutory Charges
               </h2>
               <p>
@@ -738,7 +774,7 @@ export const TermsAndConditionsPage: React.FC<PageNavProps> = ({ onNavigate }) =
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-lg font-bold text-[#101820]">
+              <h2 className="text-lg font-extrabold text-[#111820]">
                 3. Changes to Confirmed Trips &amp; Additional Distance
               </h2>
               <p>
@@ -749,7 +785,7 @@ export const TermsAndConditionsPage: React.FC<PageNavProps> = ({ onNavigate }) =
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-lg font-bold text-[#101820]">
+              <h2 className="text-lg font-extrabold text-[#111820]">
                 4. Forest Checkposts, Night Curfews &amp; Safety Compliance
               </h2>
               <p>
@@ -782,7 +818,7 @@ export const CancellationRefundPolicyPage: React.FC<PageNavProps> = ({ onNavigat
         ]}
       />
 
-      <section className="bg-[#101820] text-white py-10 sm:py-14 border-b border-slate-800">
+      <section className="bg-gradient-to-br from-[#111820] via-[#172536] to-[#111820] text-white py-10 sm:py-14 border-b-4 border-[#FFC400]">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <Breadcrumbs
             lightText
@@ -792,7 +828,7 @@ export const CancellationRefundPolicyPage: React.FC<PageNavProps> = ({ onNavigat
               { name: 'Cancellation & Refund Policy', path: '/cancellation-refund-policy/' },
             ]}
           />
-          <h1 className="text-3xl font-extrabold tracking-tight text-white">
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
             Cancellation &amp; Refund Policy
           </h1>
           <p className="mt-2 text-xs sm:text-sm text-slate-300">
@@ -801,17 +837,18 @@ export const CancellationRefundPolicyPage: React.FC<PageNavProps> = ({ onNavigat
         </div>
       </section>
 
-      <section className="py-12 bg-[#FAF9F5]">
+      <section className="py-12 bg-[#F7F6F1]">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-xl border border-[#E2DDD2] bg-white p-6 sm:p-10 space-y-6 text-sm sm:text-base text-slate-700 leading-relaxed">
-            <div className="rounded-lg border border-amber-300 bg-[#FFFDF5] p-4 text-xs text-slate-700">
-              <strong>Owner Approval Required:</strong> No arbitrary cancellation cutoff hours or
-              unapproved refund percentages have been invented on this page. The business owner must
-              specify the exact advance-payment and refund windows before accepting deposits.
+          <div className="rounded-2xl border-2 border-[#D8DFE8] bg-white p-6 sm:p-10 space-y-6 text-sm sm:text-base text-[#263241] leading-relaxed shadow-sm">
+            <div className="rounded-xl border-2 border-[#FFC400] bg-[#F7F6F1] p-4 text-xs text-[#263241]">
+              <strong className="text-[#111820]">Owner Approval Required:</strong> No arbitrary
+              cancellation cutoff hours or unapproved refund percentages have been invented on this
+              page. The business owner must specify the exact advance-payment and refund windows
+              before accepting deposits.
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-lg font-bold text-[#101820]">
+              <h2 className="text-lg font-extrabold text-[#111820]">
                 1. Unconfirmed Enquiries Carry Zero Cancellation Fee
               </h2>
               <p>
@@ -822,7 +859,7 @@ export const CancellationRefundPolicyPage: React.FC<PageNavProps> = ({ onNavigat
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-lg font-bold text-[#101820]">
+              <h2 className="text-lg font-extrabold text-[#111820]">
                 2. Rescheduling a Confirmed Booking (Subject to Owner Policy)
               </h2>
               <p>
@@ -834,7 +871,7 @@ export const CancellationRefundPolicyPage: React.FC<PageNavProps> = ({ onNavigat
             </div>
 
             <div className="space-y-2">
-              <h2 className="text-lg font-bold text-[#101820]">
+              <h2 className="text-lg font-extrabold text-[#111820]">
                 3. Cancellations &amp; Advance Refunds (Pending Owner Configuration)
               </h2>
               <p>
@@ -870,13 +907,15 @@ export const NotFoundPage: React.FC<PageNavProps> = ({ onNavigate }) => {
         canonicalPath="/404/"
       />
 
-      <section className="py-20 bg-[#FAF9F5]">
+      <section className="py-20 bg-[#F7F6F1]">
         <div className="mx-auto max-w-2xl px-4 sm:px-6 text-center space-y-6">
-          <p className="font-mono-tabular text-sm font-bold text-slate-500">HTTP 404</p>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#101820]">
+          <span className="inline-block rounded-lg bg-[#111820] px-3 py-1 font-mono-tabular text-xs font-extrabold text-[#FFC400]">
+            HTTP 404
+          </span>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#111820]">
             Route or Page Not Found
           </h1>
-          <p className="text-sm sm:text-base text-slate-600">
+          <p className="text-sm sm:text-base text-[#263241]">
             The page you requested does not exist or may have moved. Use the links below to return
             to the trip fare calculator or browse our tour directory.
           </p>
@@ -884,15 +923,15 @@ export const NotFoundPage: React.FC<PageNavProps> = ({ onNavigate }) => {
             <a
               href="/"
               onClick={(e) => handleLink(e, '/')}
-              className="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg bg-[#101820] px-5 py-2.5 text-sm font-bold text-[#F5C518]"
+              className="inline-flex min-h-[46px] items-center justify-center gap-2 rounded-xl bg-[#FFC400] hover:bg-[#F5B800] px-5 py-2.5 text-sm font-extrabold text-[#111820] shadow-md"
             >
               <span>Return to Homepage</span>
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              <ArrowRight className="h-4 w-4 stroke-[2.5]" aria-hidden="true" />
             </a>
             <a
               href="/tours/"
               onClick={(e) => handleLink(e, '/tours/')}
-              className="inline-flex min-h-[44px] items-center justify-center rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-[#101820]"
+              className="inline-flex min-h-[46px] items-center justify-center rounded-xl border-2 border-[#111820] bg-white px-5 py-2.5 text-sm font-extrabold text-[#111820] hover:bg-[#111820] hover:text-[#FFC400]"
             >
               View All 10 Tour Routes
             </a>
