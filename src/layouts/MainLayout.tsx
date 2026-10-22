@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Phone, MessageCircle, MapPin, Clock, ArrowRight } from 'lucide-react';
+import { Menu, X, Phone, MessageCircle, MapPin, ArrowRight } from 'lucide-react';
 import {
   business,
   hasConfirmedPhone,
@@ -68,60 +68,6 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
       >
         Skip to main content
       </a>
-
-      {/* Top Information Bar (Desktop & Tablet — non-sticky so mobile sticky height stays well under 15%) */}
-      <div
-        role="region"
-        aria-label="Service Area and Dispatch Information"
-        className="border-b border-white/10 bg-[#101820] text-slate-300 text-xs"
-      >
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-2 flex flex-wrap items-center justify-between gap-x-6 gap-y-1.5">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span className="inline-flex items-center gap-1.5 text-slate-200">
-              <MapPin className="h-3.5 w-3.5 text-[#F5C518] shrink-0" aria-hidden="true" />
-              <span>{business.address}</span>
-            </span>
-            <span aria-hidden="true" className="hidden md:inline text-slate-600">
-              ·
-            </span>
-            <span className="hidden md:inline text-slate-300">
-              Hubs: Gandhipuram, Peelamedu, Airport &amp; Railway Station
-            </span>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-            {hasConfirmedPhone() ? (
-              <a
-                href={`tel:${business.phone.replace(/\s+/g, '')}`}
-                onClick={() => trackEvent('phone_click', { location: 'top_bar' })}
-                className="inline-flex items-center gap-1.5 font-mono-tabular font-semibold text-[#F5C518] hover:underline"
-              >
-                <Phone className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                <span>{business.phone}</span>
-              </a>
-            ) : (
-              <span className="text-slate-400">Phone: Pending Setup</span>
-            )}
-            <span aria-hidden="true" className="text-slate-600">
-              ·
-            </span>
-            {hasConfirmedWhatsapp() && cleanWa ? (
-              <a
-                href={`https://wa.me/${cleanWa}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => trackEvent('whatsapp_click', { location: 'top_bar' })}
-                className="inline-flex items-center gap-1.5 font-semibold text-emerald-400 hover:underline"
-              >
-                <MessageCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                <span>WhatsApp: 99943 53722</span>
-              </a>
-            ) : (
-              <span className="text-slate-400">WhatsApp: Pending Setup</span>
-            )}
-          </div>
-        </div>
-      </div>
 
       {/* Main Navigation Header — Strict 3-Zone Top Bar Contract */}
       <header className="sticky top-0 z-40 border-b border-[#E5E0D5] bg-white/95 backdrop-blur-xs">
