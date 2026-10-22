@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="48" viewBox="0 0 220 48">
+  <rect width="220" height="48" rx="8" fill="white"/>
+  <!-- Icon -->
+  <g transform="translate(6,6)">
+    <rect x="0" y="0" width="36" height="36" rx="10" fill="#FFC107"/>
+    <path d="M9 14 L18 8 L27 14 L27 22 L9 22 Z" fill="#111111" stroke="#111111" stroke-width="1.5" stroke-linejoin="round"/>
+    <circle cx="13" cy="24" r="3.2" fill="#111111"/>
+    <circle cx="23" cy="24" r="3.2" fill="#111111"/>
+    <rect x="14" y="11" width="8" height="3" rx="1" fill="white" opacity="0.95"/>
+  </g>
+  <!-- Text -->
+  <g font-family="Inter, Poppins, Segoe UI, Arial, sans-serif">
+    <text x="52" y="22" font-size="17" font-weight="800" letter-spacing="-0.3" fill="#111111">YELLOW</text>
+    <text x="52" y="38" font-size="17" font-weight="800" letter-spacing="-0.3" fill="#FFC107">GO TAXI</text>
+  </g>
+</svg>
