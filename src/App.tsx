@@ -18,9 +18,55 @@ import { getServiceBySlug } from './data/servicesData';
 import { getTourBySlug } from './data/toursData';
 import { getBlogBySlug } from './data/blogsData';
 
+const KNOWN_TOP_ROUTES = new Set([
+  'services',
+  'tours',
+  'blog',
+  'about',
+  'contact',
+  'faq',
+  'privacy-policy',
+  'terms-and-conditions',
+  'cancellation-refund-policy',
+  '404',
+]);
+
+/**
+ * Detects if the site is running under a GitHub Pages repository subpath
+ * (e.g. https://username.github.io/repo-name/) and returns the base prefix
+ * (e.g. "/repo-name") or "" when running at domain root.
+ */
+export function getBasePrefix(): string {
+  try {
+    const metaBase = (import.meta as unknown as { env?: { BASE_URL?: string } }).env?.BASE_URL;
+    if (metaBase && metaBase !== '/' && metaBase !== './') {
+      return metaBase.replace(/\/$/, '');
+    }
+  } catch {
+    // Ignore in Node test environment
+  }
+
+  if (typeof window !== 'undefined' && window.location.hostname.endsWith('github.io')) {
+    const segments = window.location.pathname.split('/').filter(Boolean);
+    if (segments.length > 0 && !KNOWN_TOP_ROUTES.has(segments[0])) {
+      return `/${segments[0]}`;
+    }
+  }
+  return '';
+}
+
 export function normalizeRoutePath(rawPath: string): string {
   if (!rawPath || rawPath === '/') return '/';
-  const withoutQuery = rawPath.split('?')[0].split('#')[0];
+  let withoutQuery = rawPath.split('?')[0].split('#')[0];
+
+  const basePrefix = getBasePrefix();
+  if (basePrefix && withoutQuery.startsWith(basePrefix)) {
+    withoutQuery = withoutQuery.slice(basePrefix.length) || '/';
+  }
+
+  if (!withoutQuery.startsWith('/')) {
+    withoutQuery = `/${withoutQuery}`;
+  }
   if (withoutQuery === '/') return '/';
   return withoutQuery.endsWith('/') ? withoutQuery : `${withoutQuery}/`;
 }
@@ -49,7 +95,9 @@ export function App({ initialPath }: AppProps = {}) {
   const handleNavigate = useCallback((nextPath: string) => {
     const normalized = normalizeRoutePath(nextPath);
     if (typeof window !== 'undefined') {
-      window.history.pushState({}, '', normalized);
+      const basePrefix = getBasePrefix();
+      const browserUrl = basePrefix ? `${basePrefix}${normalized}` : normalized;
+      window.history.pushState({}, '', browserUrl);
       window.scrollTo({ top: 0, behavior: 'auto' });
     }
     setCurrentPath(normalized);

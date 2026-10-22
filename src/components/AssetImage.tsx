@@ -22,9 +22,13 @@ export const AssetImage: React.FC<AssetImageProps> = ({
   const [imageError, setImageError] = useState(false);
 
   const metaEnv = (
-    import.meta as unknown as { env?: { DEV?: boolean; VITE_ASSET_DEBUG?: string } }
+    import.meta as unknown as {
+      env?: { DEV?: boolean; VITE_ASSET_DEBUG?: string; BASE_URL?: string };
+    }
   ).env;
   const isDevOrDebug = Boolean(metaEnv?.DEV || metaEnv?.VITE_ASSET_DEBUG === 'true');
+  const baseUrl = (metaEnv?.BASE_URL || '/').replace(/\/$/, '');
+  const resolvedSrc = `${baseUrl}${spec.publicPath}`;
 
   const resolvedAlt = alt || spec.altTextGuidance;
 
@@ -45,7 +49,7 @@ export const AssetImage: React.FC<AssetImageProps> = ({
       {/* Actual image tag referencing /images/<filename> so uploading the file works immediately */}
       {!imageError && (
         <img
-          src={spec.publicPath}
+          src={resolvedSrc}
           alt={resolvedAlt}
           width={spec.width}
           height={spec.height}
