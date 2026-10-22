@@ -1,0 +1,26 @@
+{
+  "name": "Yellow Go Taxi",
+  "short_name": "Yellow Go Taxi",
+  "description": "Premium Taxi Services for Local Rides, Outstation Trips & Memorable Tours in Coimbatore, Tamil Nadu.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF9F5",
+  "theme_color": "#F5C518",
+  "icons": [
+    {
+      "src": "/images/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

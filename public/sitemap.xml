@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Core Pages -->
+  <url><loc>https://yellowgotaxi.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://yellowgotaxi.com/services/</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://yellowgotaxi.com/services/local-taxi/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yellowgotaxi.com/services/hourly-rental/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yellowgotaxi.com/services/outstation-drop/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yellowgotaxi.com/services/round-trip/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yellowgotaxi.com/tours/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://yellowgotaxi.com/blog/</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yellowgotaxi.com/about/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://yellowgotaxi.com/contact/</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://yellowgotaxi.com/faq/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- 10 Dedicated Tour Landing Pages -->
+  <url><loc>https://yellowgotaxi.com/tours/coimbatore-to-ooty-taxi/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://yellowgotaxi.com/tours/coimbatore-to-kodaikanal-taxi/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://yellowgotaxi.com/tours/isha-yoga-center-taxi/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://yellowgotaxi.com/tours/coimbatore-to-valparai-taxi/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://yellowgotaxi.com/tours/coimbatore-to-munnar-taxi/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://yellowgotaxi.com/tours/coimbatore-to-yercaud-taxi/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://yellowgotaxi.com/tours/masinagudi-mudumalai-taxi/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://yellowgotaxi.com/tours/topslip-taxi/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://yellowgotaxi.com/tours/palani-temple-taxi/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://yellowgotaxi.com/tours/coimbatore-to-chikmagalur-taxi/</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+
+  <!-- 10 Dedicated Travel Blog Articles -->
+  <url><loc>https://yellowgotaxi.com/blog/hidden-tourist-places-near-coimbatore/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://yellowgotaxi.com/blog/best-time-to-visit-ooty/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://yellowgotaxi.com/blog/weekend-getaways-from-coimbatore/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://yellowgotaxi.com/blog/valparai-travel-guide/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://yellowgotaxi.com/blog/isha-yoga-center-travel-guide/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://yellowgotaxi.com/blog/family-friendly-tourist-places-tamil-nadu/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://yellowgotaxi.com/blog/coimbatore-to-ooty-road-trip/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://yellowgotaxi.com/blog/monsoon-travel-tips/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://yellowgotaxi.com/blog/best-hill-stations-near-coimbatore/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://yellowgotaxi.com/blog/taxi-trip-checklist/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- Legal Policies -->
+  <url><loc>https://yellowgotaxi.com/privacy-policy/</loc><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://yellowgotaxi.com/terms-and-conditions/</loc><changefreq>yearly</changefreq><priority>0.4</priority></url>
+  <url><loc>https://yellowgotaxi.com/cancellation-refund-policy/</loc><changefreq>yearly</changefreq><priority>0.4</priority></url>
+</urlset>

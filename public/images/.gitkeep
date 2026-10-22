@@ -1,0 +1,2 @@
+# Upload final brand assets, service images, tour images, and blog images into this directory (/public/images/).
+# Refer to /IMAGE-ASSETS.md and /src/data/assetManifest.ts for exact filenames, dimensions, and aspect ratios.

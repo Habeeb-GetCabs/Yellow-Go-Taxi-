@@ -1,0 +1,6 @@
+{
+  "name": "Yellow Go Taxi — Coimbatore Taxi & Tour Services",
+  "description": "Premium local taxi, hourly rental, outstation drop, round-trip cab bookings, and curated hill station tour packages in Coimbatore, Tamil Nadu.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
