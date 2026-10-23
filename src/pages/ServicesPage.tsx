@@ -71,9 +71,6 @@ export const ServicesDirectoryPage: React.FC<ServicesDirectoryPageProps> = ({ on
                     priority={index < 2}
                     className="w-full border-0 transition-transform duration-300 group-hover:scale-104"
                   />
-                  <span className="absolute top-3.5 left-3.5 rounded-lg bg-[#111820]/90 border border-[#FFC400] px-3 py-1 text-xs font-extrabold text-[#FFC400] shadow-md">
-                    0{index + 1} · Service Mode
-                  </span>
                 </div>
                 <div className="p-6 sm:p-8 flex flex-1 flex-col justify-between space-y-6">
                   <div>

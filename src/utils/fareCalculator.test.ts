@@ -231,10 +231,68 @@ test('formatINR formats Indian currency properly', () => {
 });
 
 test('Routing service resolves verified road routes and rejects unknown/same locations without guessing', async () => {
-  const suggestions = searchLocationSuggestions('Ooty');
-  assert.equal(suggestions.length > 0, true);
-  assert.equal(suggestions[0].id, 'dest-ooty');
+  // 3-character minimum rule: 1 or 2 generic characters return empty suggestions
+  assert.equal(searchLocationSuggestions('G').length, 0);
+  assert.equal(searchLocationSuggestions('Ga').length, 0);
 
+  // Part 7 Local Search Tests
+  const ganSuggestions = searchLocationSuggestions('Gan');
+  assert.equal(ganSuggestions.some((s) => s.id === 'cbe-gandhipuram'), true);
+  assert.equal(ganSuggestions.some((s) => s.id === 'cbe-ganapathy'), true);
+
+  const airSuggestions = searchLocationSuggestions('Air');
+  assert.equal(airSuggestions[0]?.id, 'cbe-airport');
+
+  const peelSuggestions = searchLocationSuggestions('Peel');
+  assert.equal(peelSuggestions[0]?.id, 'cbe-peelamedu');
+
+  const sarSuggestions = searchLocationSuggestions('Sar');
+  assert.equal(sarSuggestions[0]?.id, 'cbe-saravanampatti');
+
+  const rsSuggestions1 = searchLocationSuggestions('RS');
+  assert.equal(rsSuggestions1[0]?.id, 'cbe-rspuram');
+  const rsSuggestions2 = searchLocationSuggestions('R.S.');
+  assert.equal(rsSuggestions2[0]?.id, 'cbe-rspuram');
+
+  // Alternative spelling & locality coverage tests
+  assert.equal(searchLocationSuggestions('Kovai Pudur')[0]?.id, 'cbe-kovaipudur');
+  assert.equal(searchLocationSuggestions('Vadav')[0]?.id, 'cbe-vadavalli');
+  assert.equal(searchLocationSuggestions('Thud')[0]?.id, 'cbe-thudiyalur');
+
+  // Part 7 Outstation Search Tests
+  const cheSuggestions = searchLocationSuggestions('Che');
+  assert.equal(cheSuggestions.some((s) => s.id === 'dest-chennai'), true);
+
+  const ootSuggestions = searchLocationSuggestions('Oot');
+  assert.equal(ootSuggestions[0]?.id, 'dest-ooty');
+
+  const benSuggestions = searchLocationSuggestions('Ben');
+  assert.equal(benSuggestions[0]?.id, 'dest-bengaluru');
+  assert.equal(searchLocationSuggestions('Bang')[0]?.id, 'dest-bengaluru');
+
+  const kocSuggestions = searchLocationSuggestions('Koc');
+  assert.equal(kocSuggestions[0]?.id, 'dest-kochi');
+
+  const hydSuggestions = searchLocationSuggestions('Hyd');
+  assert.equal(hydSuggestions[0]?.id, 'dest-hyderabad');
+
+  // Part 7 Distance & Fare Verification Tests
+  // 1. Local Coimbatore trip: Gandhipuram -> Airport (10.8 km -> ₹100 + 10.8 * 30 = ₹424)
+  const routeLocal = await getRouteDistanceKm(
+    'Gandhipuram Central Bus Stand',
+    'Coimbatore International Airport (CJB)'
+  );
+  assert.equal(routeLocal.ok, true);
+  if (routeLocal.ok) {
+    assert.equal(routeLocal.distanceKm, 10.8);
+    const localFare = calculateTripFare({ tripType: 'local', distanceKm: routeLocal.distanceKm });
+    assert.equal(localFare.ok, true);
+    if (localFare.ok) {
+      assert.equal(localFare.estimatedFare, 424);
+    }
+  }
+
+  // 2. Coimbatore to Ooty (86 km one-way -> Outstation Drop ₹2,980; Round Trip 2 days 172 km -> ₹3,408)
   const routeOoty = await getRouteDistanceKm(
     'Coimbatore Junction Railway Station',
     'Ooty (Udhagamandalam)'
@@ -244,6 +302,37 @@ test('Routing service resolves verified road routes and rejects unknown/same loc
     assert.equal(routeOoty.distanceKm, 86);
   }
 
+  // 3. Coimbatore to Chennai (~506 km one-way -> Outstation Drop 506 * 30 + 400 = ₹15,580)
+  const routeChennai = await getRouteDistanceKm('Gandhipuram Central Bus Stand', 'Chennai');
+  assert.equal(routeChennai.ok, true);
+  if (routeChennai.ok) {
+    assert.equal(routeChennai.distanceKm, 506);
+    const chennaiDropFare = calculateTripFare({
+      tripType: 'outstation_drop',
+      distanceKm: routeChennai.distanceKm,
+    });
+    assert.equal(chennaiDropFare.ok, true);
+    if (chennaiDropFare.ok) {
+      assert.equal(chennaiDropFare.estimatedFare, 15580);
+    }
+  }
+
+  // 4. Coimbatore to Kochi (~192 km one-way -> Outstation Drop 192 * 30 + 400 = ₹6,160)
+  const routeKochi = await getRouteDistanceKm('Gandhipuram Central Bus Stand', 'Kochi (Cochin / Ernakulam)');
+  assert.equal(routeKochi.ok, true);
+  if (routeKochi.ok) {
+    assert.equal(routeKochi.distanceKm, 192);
+    const kochiDropFare = calculateTripFare({
+      tripType: 'outstation_drop',
+      distanceKm: routeKochi.distanceKm,
+    });
+    assert.equal(kochiDropFare.ok, true);
+    if (kochiDropFare.ok) {
+      assert.equal(kochiDropFare.estimatedFare, 6160);
+    }
+  }
+
+  // 5. Rejects identical and unresolved locations without guessing
   const sameLoc = await getRouteDistanceKm(
     'Gandhipuram Central Bus Stand',
     'Gandhipuram Central Bus Stand'

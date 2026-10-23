@@ -270,12 +270,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
             <div>
-              <span className="inline-block rounded-md bg-[#FFC400] px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#111820]">
-                01. Core Capabilities
-              </span>
               <h2
                 id="services-heading"
-                className="mt-2.5 text-2xl sm:text-4xl font-extrabold tracking-tight text-[#111820] text-balance"
+                className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[#111820] text-balance"
               >
                 Four Dedicated Taxi Booking Modes
               </h2>
@@ -296,7 +293,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {TAXI_SERVICES.map((service, idx) => (
+            {TAXI_SERVICES.map((service) => (
               <article
                 key={service.id}
                 className="group flex flex-col rounded-2xl border-2 border-[#D8DFE8] hover:border-[#FFC400] bg-white overflow-hidden shadow-md hover:shadow-xl transition-all duration-200 hover:-translate-y-1"
@@ -307,9 +304,6 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
                     alt={service.imageAlt}
                     className="w-full border-0 transition-transform duration-300 group-hover:scale-105"
                   />
-                  <span className="absolute top-3 left-3 rounded-lg bg-[#111820]/90 border border-[#FFC400] px-2.5 py-1 text-[11px] font-extrabold text-[#FFC400] shadow-md">
-                    0{idx + 1} · {service.title}
-                  </span>
                 </div>
 
                 <div className="flex flex-1 flex-col justify-between p-5 sm:p-6">
@@ -360,12 +354,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
             <div>
-              <span className="inline-block rounded-md bg-[#111820] px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#FFC400]">
-                02. Outstation &amp; Hill Station Routes
-              </span>
               <h2
                 id="featured-tours-heading"
-                className="mt-2.5 text-2xl sm:text-4xl font-extrabold tracking-tight text-[#111820] text-balance"
+                className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[#111820] text-balance"
               >
                 Featured Tours from Coimbatore
               </h2>
@@ -455,12 +446,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             <div className="lg:col-span-6 space-y-6">
               <div>
-                <span className="inline-block rounded-md bg-[#FFC400] px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#111820]">
-                  03. Built for Clarity
-                </span>
                 <h2
                   id="why-choose-heading"
-                  className="mt-3 text-2xl sm:text-4xl font-extrabold tracking-tight text-white text-balance"
+                  className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white text-balance"
                 >
                   Why Choose <span className="text-[#FFC400]">Yellow Go Taxi</span>
                 </h2>
@@ -550,12 +538,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       <section aria-labelledby="how-booking-works-heading" className="py-16 sm:py-20 bg-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl mb-10">
-            <span className="inline-block rounded-md bg-[#FFC400] px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#111820]">
-              04. Step-by-Step Process
-            </span>
             <h2
               id="how-booking-works-heading"
-              className="mt-2.5 text-2xl sm:text-4xl font-extrabold tracking-tight text-[#111820] text-balance"
+              className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[#111820] text-balance"
             >
               How Booking Works
             </h2>
@@ -567,33 +552,27 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
-                step: '01. Select Trip Type & Route',
                 title: 'Enter Pickup, Destination & Schedule',
                 description:
                   'Choose between Local, Hourly Rental, Outstation Drop, or Round Trip. Select your Coimbatore pickup hub, destination, and travel dates.',
               },
               {
-                step: '02. Review Estimated Trip Fare',
                 title: 'Get an Instant Route-Based Estimate',
                 description:
                   'Our fare calculator resolves the road distance in kilometres and displays your estimated trip fare upfront.',
               },
               {
-                step: '03. Confirm Details on WhatsApp',
                 title: 'Send Pre-Filled Enquiry for Confirmation',
                 description:
                   'Click "Book This Trip on WhatsApp" to send your structured trip summary. Our dispatch team reviews availability and confirms final details.',
               },
             ].map((item) => (
               <div
-                key={item.step}
+                key={item.title}
                 className="rounded-2xl border-2 border-[#D8DFE8] bg-[#F7F6F1] p-6 sm:p-7 flex flex-col justify-between shadow-sm hover:border-[#FFC400] transition-colors"
               >
                 <div>
-                  <span className="inline-block rounded-lg bg-[#111820] px-3 py-1 font-mono-tabular text-xs font-extrabold text-[#FFC400]">
-                    {item.step}
-                  </span>
-                  <h3 className="mt-4 text-lg sm:text-xl font-extrabold text-[#111820]">
+                  <h3 className="text-lg sm:text-xl font-extrabold text-[#111820]">
                     {item.title}
                   </h3>
                   <p className="mt-2 text-sm text-[#263241] leading-relaxed">{item.description}</p>
@@ -612,12 +591,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
             <div>
-              <span className="inline-block rounded-md bg-[#111820] px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#FFC400]">
-                05. Regional Road-Trip Guides
-              </span>
               <h2
                 id="latest-blogs-heading"
-                className="mt-2.5 text-2xl sm:text-4xl font-extrabold tracking-tight text-[#111820] text-balance"
+                className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[#111820] text-balance"
               >
                 Latest Travel Blogs &amp; Route Insights
               </h2>
@@ -697,12 +673,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
             <div>
-              <span className="inline-block rounded-md bg-[#FFC400] px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#111820]">
-                06. Common Questions
-              </span>
               <h2
                 id="home-faq-heading"
-                className="mt-2.5 text-2xl sm:text-4xl font-extrabold tracking-tight text-[#111820]"
+                className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[#111820]"
               >
                 Frequently Asked Questions
               </h2>

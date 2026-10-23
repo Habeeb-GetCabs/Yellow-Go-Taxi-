@@ -18,7 +18,6 @@ export const AssetImage: React.FC<AssetImageProps> = ({
   variant = 'default',
 }) => {
   const spec = getAssetSpec(filename);
-  const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
 
   const metaEnv = (
@@ -59,16 +58,13 @@ export const AssetImage: React.FC<AssetImageProps> = ({
           height={spec.height}
           loading={priority ? 'eager' : 'lazy'}
           decoding={priority ? 'sync' : 'async'}
-          onLoad={() => setImageLoaded(true)}
           onError={() => setImageError(true)}
-          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-200 ${
-            imageLoaded ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          }`}
+          className="absolute inset-0 z-10 h-full w-full object-cover"
         />
       )}
 
-      {/* Intentional architectural placeholder rendered while image is loading */}
-      {!imageLoaded && (
+      {/* Intentional architectural placeholder rendered if image fails to load */}
+      {imageError && (
         <div
           className="absolute inset-0 flex flex-col justify-between p-4 sm:p-6 select-none bg-gradient-to-br from-[#111820] via-[#172536] to-[#111820]"
           aria-label={resolvedAlt}

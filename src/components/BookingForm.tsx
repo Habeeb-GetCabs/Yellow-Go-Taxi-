@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useId } from 'react';
+import React, { useState, useEffect, useId, useRef } from 'react';
 import {
   MapPin,
   Clock,
@@ -15,6 +15,7 @@ import {
   ThumbsUp,
   Zap,
   Crosshair,
+  Loader2,
 } from 'lucide-react';
 import { business, hasConfirmedWhatsapp } from '../config/business';
 import { TRIP_TYPE_LABELS } from '../config/fares';
@@ -27,6 +28,8 @@ import {
 } from '../utils/fareCalculator';
 import {
   searchLocationSuggestions,
+  searchLocationsAsync,
+  findLocationByLabelOrId,
   getRouteDistanceKm,
   type LocationSuggestion,
 } from '../utils/routingService';
@@ -49,6 +52,11 @@ function getDefaultTravelDate(): string {
   return tomorrow.toISOString().split('T')[0];
 }
 
+function isQueryEligibleForAutocomplete(query: string): boolean {
+  const trimmed = query.trim();
+  return trimmed.length >= 3 || /^r\.?s\.?$/i.test(trimmed);
+}
+
 export const BookingForm: React.FC<BookingFormProps> = ({
   initialTripType = 'outstation_drop',
   initialPickup = '',
@@ -63,6 +71,13 @@ export const BookingForm: React.FC<BookingFormProps> = ({
   const [tripType, setTripType] = useState<TripMode>(initialTripType);
   const [pickupAddress, setPickupAddress] = useState(initialPickup);
   const [dropAddress, setDropAddress] = useState(initialDrop);
+  const [selectedPickup, setSelectedPickup] = useState<LocationSuggestion | null>(() =>
+    findLocationByLabelOrId(initialPickup) || null
+  );
+  const [selectedDrop, setSelectedDrop] = useState<LocationSuggestion | null>(() =>
+    findLocationByLabelOrId(initialDrop) || null
+  );
+
   const [travelDate] = useState(getDefaultTravelDate());
   const [returnDate] = useState('');
   const [bookedHours, setBookedHours] = useState<string>(String(initialHours));
@@ -70,9 +85,18 @@ export const BookingForm: React.FC<BookingFormProps> = ({
   const [customerName, setCustomerName] = useState('');
   const [customerPhone] = useState('');
 
-  // Autocomplete dropdown visibility
+  // Autocomplete dropdown visibility, dynamic results, loading, and keyboard active index
   const [showPickupSuggestions, setShowPickupSuggestions] = useState(false);
   const [showDropSuggestions, setShowDropSuggestions] = useState(false);
+  const [pickupSuggestions, setPickupSuggestions] = useState<LocationSuggestion[]>([]);
+  const [dropSuggestions, setDropSuggestions] = useState<LocationSuggestion[]>([]);
+  const [isSearchingPickup, setIsSearchingPickup] = useState(false);
+  const [isSearchingDrop, setIsSearchingDrop] = useState(false);
+  const [pickupActiveIdx, setPickupActiveIdx] = useState<number>(-1);
+  const [dropActiveIdx, setDropActiveIdx] = useState<number>(-1);
+
+  const pickupSearchAbortRef = useRef<AbortController | null>(null);
+  const dropSearchAbortRef = useRef<AbortController | null>(null);
 
   // Route & calculation states
   const [isCalculating, setIsCalculating] = useState(false);
@@ -88,8 +112,14 @@ export const BookingForm: React.FC<BookingFormProps> = ({
   // Sync props when navigating between dedicated service/tour pages
   useEffect(() => {
     setTripType(initialTripType);
-    if (initialPickup) setPickupAddress(initialPickup);
-    if (initialDrop) setDropAddress(initialDrop);
+    if (initialPickup !== undefined) {
+      setPickupAddress(initialPickup);
+      setSelectedPickup(findLocationByLabelOrId(initialPickup) || null);
+    }
+    if (initialDrop !== undefined) {
+      setDropAddress(initialDrop);
+      setSelectedDrop(findLocationByLabelOrId(initialDrop) || null);
+    }
     if (initialHours) setBookedHours(String(initialHours));
     if (initialDays) setChargeableDays(String(initialDays));
     setFareResult(null);
@@ -108,20 +138,154 @@ export const BookingForm: React.FC<BookingFormProps> = ({
     }
   }, [tripType, travelDate, returnDate]);
 
-  const pickupSuggestions: LocationSuggestion[] = searchLocationSuggestions(pickupAddress);
-  const dropSuggestions: LocationSuggestion[] = searchLocationSuggestions(dropAddress);
+  // Dynamic 3-character search for Pickup
+  useEffect(() => {
+    if (!isQueryEligibleForAutocomplete(pickupAddress)) {
+      setPickupSuggestions([]);
+      setIsSearchingPickup(false);
+      setPickupActiveIdx(-1);
+      return;
+    }
 
-  const handleSwapLocations = () => {
-    const temp = pickupAddress;
-    setPickupAddress(dropAddress);
-    setDropAddress(temp);
+    const immediate = searchLocationSuggestions(pickupAddress, 8);
+    setPickupSuggestions(immediate);
+    setPickupActiveIdx(immediate.length > 0 ? 0 : -1);
+
+    if (immediate.length >= 6 || selectedPickup?.label === pickupAddress) {
+      setIsSearchingPickup(false);
+      return;
+    }
+
+    setIsSearchingPickup(true);
+    const timer = setTimeout(async () => {
+      pickupSearchAbortRef.current?.abort();
+      const controller = new AbortController();
+      pickupSearchAbortRef.current = controller;
+
+      const merged = await searchLocationsAsync(pickupAddress, controller.signal, 8);
+      if (!controller.signal.aborted) {
+        setPickupSuggestions(merged);
+        setPickupActiveIdx(merged.length > 0 ? 0 : -1);
+        setIsSearchingPickup(false);
+      }
+    }, 240);
+
+    return () => {
+      clearTimeout(timer);
+      pickupSearchAbortRef.current?.abort();
+    };
+  }, [pickupAddress, selectedPickup]);
+
+  // Dynamic 3-character search for Drop
+  useEffect(() => {
+    if (!isQueryEligibleForAutocomplete(dropAddress)) {
+      setDropSuggestions([]);
+      setIsSearchingDrop(false);
+      setDropActiveIdx(-1);
+      return;
+    }
+
+    const immediate = searchLocationSuggestions(dropAddress, 8);
+    setDropSuggestions(immediate);
+    setDropActiveIdx(immediate.length > 0 ? 0 : -1);
+
+    if (immediate.length >= 6 || selectedDrop?.label === dropAddress) {
+      setIsSearchingDrop(false);
+      return;
+    }
+
+    setIsSearchingDrop(true);
+    const timer = setTimeout(async () => {
+      dropSearchAbortRef.current?.abort();
+      const controller = new AbortController();
+      dropSearchAbortRef.current = controller;
+
+      const merged = await searchLocationsAsync(dropAddress, controller.signal, 8);
+      if (!controller.signal.aborted) {
+        setDropSuggestions(merged);
+        setDropActiveIdx(merged.length > 0 ? 0 : -1);
+        setIsSearchingDrop(false);
+      }
+    }, 240);
+
+    return () => {
+      clearTimeout(timer);
+      dropSearchAbortRef.current?.abort();
+    };
+  }, [dropAddress, selectedDrop]);
+
+  const handleSelectPickupSuggestion = (loc: LocationSuggestion) => {
+    setPickupAddress(loc.label);
+    setSelectedPickup(loc);
+    setShowPickupSuggestions(false);
     setFareResult(null);
     setRouteError(null);
+    setValidationError(null);
+  };
+
+  const handleSelectDropSuggestion = (loc: LocationSuggestion) => {
+    setDropAddress(loc.label);
+    setSelectedDrop(loc);
+    setShowDropSuggestions(false);
+    setFareResult(null);
+    setRouteError(null);
+    setValidationError(null);
+  };
+
+  const handlePickupKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!showPickupSuggestions || pickupSuggestions.length === 0) {
+      if (e.key === 'Escape') setShowPickupSuggestions(false);
+      return;
+    }
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setPickupActiveIdx((prev) => (prev + 1) % pickupSuggestions.length);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setPickupActiveIdx((prev) => (prev <= 0 ? pickupSuggestions.length - 1 : prev - 1));
+    } else if (e.key === 'Enter' && pickupActiveIdx >= 0 && pickupSuggestions[pickupActiveIdx]) {
+      e.preventDefault();
+      handleSelectPickupSuggestion(pickupSuggestions[pickupActiveIdx]);
+    } else if (e.key === 'Escape') {
+      setShowPickupSuggestions(false);
+    }
+  };
+
+  const handleDropKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!showDropSuggestions || dropSuggestions.length === 0) {
+      if (e.key === 'Escape') setShowDropSuggestions(false);
+      return;
+    }
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setDropActiveIdx((prev) => (prev + 1) % dropSuggestions.length);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setDropActiveIdx((prev) => (prev <= 0 ? dropSuggestions.length - 1 : prev - 1));
+    } else if (e.key === 'Enter' && dropActiveIdx >= 0 && dropSuggestions[dropActiveIdx]) {
+      e.preventDefault();
+      handleSelectDropSuggestion(dropSuggestions[dropActiveIdx]);
+    } else if (e.key === 'Escape') {
+      setShowDropSuggestions(false);
+    }
+  };
+
+  const handleSwapLocations = () => {
+    const tempText = pickupAddress;
+    const tempLoc = selectedPickup;
+    setPickupAddress(dropAddress);
+    setSelectedPickup(selectedDrop);
+    setDropAddress(tempText);
+    setSelectedDrop(tempLoc);
+    setFareResult(null);
+    setRouteError(null);
+    setValidationError(null);
   };
 
   const handleQuickPickupFill = () => {
-    if (!pickupAddress.trim()) {
-      setPickupAddress('Gandhipuram Central Bus Stand');
+    const defaultHub = findLocationByLabelOrId('Gandhipuram Central Bus Stand');
+    if (!pickupAddress.trim() && defaultHub) {
+      handleSelectPickupSuggestion(defaultHub);
     } else {
       setShowPickupSuggestions(true);
     }
@@ -135,6 +299,8 @@ export const BookingForm: React.FC<BookingFormProps> = ({
     setRouteError(null);
     setFareResult(null);
     setEnquirySubmitted(false);
+    setShowPickupSuggestions(false);
+    setShowDropSuggestions(false);
 
     if (!pickupAddress.trim()) {
       setValidationError('Please enter or select a pickup address.');
@@ -172,10 +338,21 @@ export const BookingForm: React.FC<BookingFormProps> = ({
       return;
     }
 
+    // Resolve locations if user typed a matching name without explicitly clicking a suggestion
+    const resolvedPickup = selectedPickup || findLocationByLabelOrId(pickupAddress) || pickupAddress;
+    const resolvedDrop = selectedDrop || findLocationByLabelOrId(dropAddress) || dropAddress;
+
+    if (typeof resolvedPickup === 'object') {
+      setSelectedPickup(resolvedPickup);
+    }
+    if (typeof resolvedDrop === 'object') {
+      setSelectedDrop(resolvedDrop);
+    }
+
     setIsCalculating(true);
     trackEvent('fare_calculation_request', { trip_type: tripType });
 
-    const routeRes = await getRouteDistanceKm(pickupAddress, dropAddress);
+    const routeRes = await getRouteDistanceKm(resolvedPickup, resolvedDrop);
     setIsCalculating(false);
 
     if (!routeRes.ok) {
@@ -236,6 +413,9 @@ export const BookingForm: React.FC<BookingFormProps> = ({
       // Fallback ignored
     }
   };
+
+  const pickupHas3Chars = isQueryEligibleForAutocomplete(pickupAddress);
+  const dropHas3Chars = isQueryEligibleForAutocomplete(dropAddress);
 
   return (
     <div className="rounded-2xl border-2 border-[#D8DFE8] bg-white p-4 sm:p-6 shadow-[0_20px_50px_rgba(17,24,32,0.18)] text-[#111820]">
@@ -320,13 +500,20 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                 type="text"
                 required
                 autoComplete="off"
+                role="combobox"
+                aria-expanded={showPickupSuggestions && pickupHas3Chars}
+                aria-controls={`${formId}-pickup-listbox`}
+                aria-autocomplete="list"
                 value={pickupAddress}
                 onFocus={() => setShowPickupSuggestions(true)}
                 onBlur={() => setTimeout(() => setShowPickupSuggestions(false), 180)}
+                onKeyDown={handlePickupKeyDown}
                 onChange={(e) => {
                   setPickupAddress(e.target.value);
+                  setSelectedPickup(null);
                   setShowPickupSuggestions(true);
                   setFareResult(null);
+                  setRouteError(null);
                 }}
                 placeholder="Enter pick up location"
                 className="w-full min-h-[48px] rounded-xl border-2 border-[#D8DFE8] bg-white pl-10 pr-10 py-2.5 text-sm font-semibold text-[#111820] placeholder:font-normal placeholder:text-[#526174]/75 focus:border-[#111820] focus:outline-none focus:ring-3 focus:ring-[#FFC400]/40 transition-all"
@@ -338,34 +525,52 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                 aria-label="Quick fill Coimbatore pickup hub"
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1.5 rounded-lg text-[#526174] hover:text-[#111820] hover:bg-[#F7F6F1] transition-colors"
               >
-                <Crosshair className="h-4 w-4" aria-hidden="true" />
+                {isSearchingPickup ? (
+                  <Loader2 className="h-4 w-4 animate-spin text-[#111820]" aria-hidden="true" />
+                ) : (
+                  <Crosshair className="h-4 w-4" aria-hidden="true" />
+                )}
               </button>
             </div>
 
-            {showPickupSuggestions && pickupSuggestions.length > 0 && (
+            {showPickupSuggestions && pickupHas3Chars && (
               <ul
+                id={`${formId}-pickup-listbox`}
                 role="listbox"
                 aria-label="Suggested pickup locations"
-                className="absolute z-30 mt-1.5 max-h-60 w-full overflow-auto rounded-xl border-2 border-[#111820]/15 bg-white py-1.5 shadow-2xl"
+                className="absolute z-30 mt-1.5 max-h-64 w-full overflow-auto rounded-xl border-2 border-[#111820]/15 bg-white py-1.5 shadow-2xl"
               >
-                {pickupSuggestions.map((loc) => (
-                  <li key={loc.id} role="option" aria-selected={pickupAddress === loc.label}>
-                    <button
-                      type="button"
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        setPickupAddress(loc.label);
-                        setShowPickupSuggestions(false);
-                        setFareResult(null);
-                        setRouteError(null);
-                      }}
-                      className="flex w-full flex-col items-start px-3.5 py-2.5 text-left hover:bg-[#FFC400]/15 transition-colors"
+                {pickupSuggestions.map((loc, idx) => {
+                  const isActive = idx === pickupActiveIdx;
+                  return (
+                    <li
+                      key={loc.id}
+                      role="option"
+                      aria-selected={isActive || pickupAddress === loc.label}
                     >
-                      <span className="text-xs font-extrabold text-[#111820]">{loc.label}</span>
-                      <span className="text-[11px] font-medium text-[#526174]">{loc.secondaryText}</span>
-                    </button>
+                      <button
+                        type="button"
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          handleSelectPickupSuggestion(loc);
+                        }}
+                        className={`flex w-full flex-col items-start px-3.5 py-2.5 text-left transition-colors ${
+                          isActive ? 'bg-[#FFC400]/25' : 'hover:bg-[#FFC400]/15'
+                        }`}
+                      >
+                        <span className="text-xs font-extrabold text-[#111820]">{loc.label}</span>
+                        <span className="text-[11px] font-medium text-[#526174]">
+                          {loc.secondaryText}
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
+                {!isSearchingPickup && pickupSuggestions.length === 0 && (
+                  <li className="px-3.5 py-2.5 text-xs font-medium text-[#526174]">
+                    No matching locations found. Try a nearby Coimbatore area or city name.
                   </li>
-                ))}
+                )}
               </ul>
             )}
           </div>
@@ -388,43 +593,70 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                 type="text"
                 required
                 autoComplete="off"
+                role="combobox"
+                aria-expanded={showDropSuggestions && dropHas3Chars}
+                aria-controls={`${formId}-drop-listbox`}
+                aria-autocomplete="list"
                 value={dropAddress}
                 onFocus={() => setShowDropSuggestions(true)}
                 onBlur={() => setTimeout(() => setShowDropSuggestions(false), 180)}
+                onKeyDown={handleDropKeyDown}
                 onChange={(e) => {
                   setDropAddress(e.target.value);
+                  setSelectedDrop(null);
                   setShowDropSuggestions(true);
                   setFareResult(null);
+                  setRouteError(null);
                 }}
                 placeholder="Enter drop location"
-                className="w-full min-h-[48px] rounded-xl border-2 border-[#D8DFE8] bg-white pl-10 pr-3.5 py-2.5 text-sm font-semibold text-[#111820] placeholder:font-normal placeholder:text-[#526174]/75 focus:border-[#111820] focus:outline-none focus:ring-3 focus:ring-[#FFC400]/40 transition-all"
+                className="w-full min-h-[48px] rounded-xl border-2 border-[#D8DFE8] bg-white pl-10 pr-8 py-2.5 text-sm font-semibold text-[#111820] placeholder:font-normal placeholder:text-[#526174]/75 focus:border-[#111820] focus:outline-none focus:ring-3 focus:ring-[#FFC400]/40 transition-all"
               />
+              {isSearchingDrop && (
+                <Loader2
+                  className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin text-[#111820]"
+                  aria-hidden="true"
+                />
+              )}
             </div>
 
-            {showDropSuggestions && dropSuggestions.length > 0 && (
+            {showDropSuggestions && dropHas3Chars && (
               <ul
+                id={`${formId}-drop-listbox`}
                 role="listbox"
                 aria-label="Suggested drop locations"
-                className="absolute z-30 mt-1.5 max-h-60 w-full overflow-auto rounded-xl border-2 border-[#111820]/15 bg-white py-1.5 shadow-2xl"
+                className="absolute z-30 mt-1.5 max-h-64 w-full overflow-auto rounded-xl border-2 border-[#111820]/15 bg-white py-1.5 shadow-2xl"
               >
-                {dropSuggestions.map((loc) => (
-                  <li key={loc.id} role="option" aria-selected={dropAddress === loc.label}>
-                    <button
-                      type="button"
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                        setDropAddress(loc.label);
-                        setShowDropSuggestions(false);
-                        setFareResult(null);
-                        setRouteError(null);
-                      }}
-                      className="flex w-full flex-col items-start px-3.5 py-2.5 text-left hover:bg-[#FFC400]/15 transition-colors"
+                {dropSuggestions.map((loc, idx) => {
+                  const isActive = idx === dropActiveIdx;
+                  return (
+                    <li
+                      key={loc.id}
+                      role="option"
+                      aria-selected={isActive || dropAddress === loc.label}
                     >
-                      <span className="text-xs font-extrabold text-[#111820]">{loc.label}</span>
-                      <span className="text-[11px] font-medium text-[#526174]">{loc.secondaryText}</span>
-                    </button>
+                      <button
+                        type="button"
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          handleSelectDropSuggestion(loc);
+                        }}
+                        className={`flex w-full flex-col items-start px-3.5 py-2.5 text-left transition-colors ${
+                          isActive ? 'bg-[#FFC400]/25' : 'hover:bg-[#FFC400]/15'
+                        }`}
+                      >
+                        <span className="text-xs font-extrabold text-[#111820]">{loc.label}</span>
+                        <span className="text-[11px] font-medium text-[#526174]">
+                          {loc.secondaryText}
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
+                {!isSearchingDrop && dropSuggestions.length === 0 && (
+                  <li className="px-3.5 py-2.5 text-xs font-medium text-[#526174]">
+                    No matching locations found. Try a nearby area, town, or city name.
                   </li>
-                ))}
+                )}
               </ul>
             )}
           </div>
@@ -548,7 +780,7 @@ export const BookingForm: React.FC<BookingFormProps> = ({
               { short: 'Airport', full: 'Coimbatore International Airport (CJB)' },
               { short: 'Railway Station', full: 'Coimbatore Junction Railway Station' },
               { short: 'R.S. Puram', full: 'R.S. Puram (D.B. Road)' },
-              { short: 'Tidel Park', full: 'Peelamedu (PSG Tech /TIDEL Park)' },
+              { short: 'Tidel Park', full: 'Peelamedu (PSG Tech / TIDEL Park)' },
               { short: 'Ukkadam', full: 'Ukkadam Bus Stand' },
             ].map((hub) => {
               const isSelected = pickupAddress === hub.full;
@@ -557,7 +789,9 @@ export const BookingForm: React.FC<BookingFormProps> = ({
                   key={hub.short}
                   type="button"
                   onClick={() => {
+                    const resolved = findLocationByLabelOrId(hub.full) || null;
                     setPickupAddress(hub.full);
+                    setSelectedPickup(resolved);
                     setFareResult(null);
                     setRouteError(null);
                   }}
