@@ -4,8 +4,8 @@
   "description": "Premium Taxi Services for Local Rides, Outstation Trips & Memorable Tours in Coimbatore, Tamil Nadu.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FAF9F5",
-  "theme_color": "#F5C518",
+  "background_color": "#F7F6F1",
+  "theme_color": "#FFC400",
   "icons": [
     {
       "src": "/images/favicon-32x32.png",

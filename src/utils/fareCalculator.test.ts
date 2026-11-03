@@ -223,6 +223,20 @@ test('WhatsApp message and URL builder encodes properly and hides internal break
   assert.equal(configured.isConfigured, true);
   assert.equal(configured.url?.startsWith('https://wa.me/919876500000?text='), true);
   assert.equal(configured.message.includes('Duration: 3 Days'), true);
+
+  // When customerPhone is blank (calculator quick estimate), omits empty "Phone:" line
+  const noPhoneMsg = buildWhatsAppMessage({
+    customerName: 'Anand S',
+    customerPhone: '',
+    tripType: 'local',
+    pickupAddress: 'Gandhipuram, Coimbatore',
+    dropAddress: 'Coimbatore International Airport (CJB)',
+    travelDate: '2026-12-05',
+    estimatedDistanceKm: 10.8,
+    estimatedFare: 424,
+  });
+  assert.equal(noPhoneMsg.includes('Phone:'), false);
+  assert.equal(noPhoneMsg.includes('Estimated Fare: ₹424'), true);
 });
 
 test('formatINR formats Indian currency properly', () => {

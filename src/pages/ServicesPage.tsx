@@ -182,6 +182,7 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, o
         title={service.metaTitle}
         description={service.metaDescription}
         canonicalPath={service.path}
+        ogImage={service.imageFilename}
         breadcrumbs={[
           { name: 'Home', path: '/' },
           { name: 'Taxi Services', path: '/services/' },

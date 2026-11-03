@@ -137,6 +137,7 @@ export const BlogDetailPage: React.FC<BlogDetailPageProps> = ({ article, onNavig
         description={article.metaDescription}
         canonicalPath={article.path}
         ogType="article"
+        ogImage={article.imageFilename}
         breadcrumbs={[
           { name: 'Home', path: '/' },
           { name: 'Travel Blog', path: '/blog/' },

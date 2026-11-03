@@ -58,6 +58,7 @@ export const AssetImage: React.FC<AssetImageProps> = ({
           height={spec.height}
           loading={priority ? 'eager' : 'lazy'}
           decoding={priority ? 'sync' : 'async'}
+          fetchPriority={priority ? 'high' : 'auto'}
           onError={() => setImageError(true)}
           className="absolute inset-0 z-10 h-full w-full object-cover"
         />

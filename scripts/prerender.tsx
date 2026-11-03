@@ -36,6 +36,7 @@ const ALL_ROUTES: RouteMeta[] = [
     title: s.metaTitle,
     description: s.metaDescription,
     canonicalPath: s.path,
+    ogImage: s.imageFilename,
     breadcrumbs: [
       { name: 'Home', path: '/' },
       { name: 'Taxi Services', path: '/services/' },
@@ -48,6 +49,7 @@ const ALL_ROUTES: RouteMeta[] = [
     title: 'Coimbatore Local Taxi Service | Point-to-Point City Rides | Yellow Go Taxi',
     description: 'Book a Coimbatore local taxi for airport transfers, railway station pickups, hospital visits, and city point-to-point travel with clear upfront fare estimates.',
     canonicalPath: '/services/local-taxi/',
+    ogImage: 'service-local.webp',
     breadcrumbs: [
       { name: 'Home', path: '/' },
       { name: 'Taxi Services', path: '/services/' },
@@ -59,6 +61,7 @@ const ALL_ROUTES: RouteMeta[] = [
     title: 'Coimbatore Outstation Drop Taxi | Point-to-Point Intercity Cabs | Yellow Go Taxi',
     description: 'Book an Outstation Drop taxi from Coimbatore to Ooty, Kodaikanal, Munnar, Palani, Valparai, Salem, or Bengaluru. Transparent point-to-point fare estimates.',
     canonicalPath: '/services/outstation-drop/',
+    ogImage: 'service-outstation.webp',
     breadcrumbs: [
       { name: 'Home', path: '/' },
       { name: 'Taxi Services', path: '/services/' },
@@ -70,6 +73,7 @@ const ALL_ROUTES: RouteMeta[] = [
     title: 'Hourly Taxi Rental in Coimbatore | Flexible City Packages | Yellow Go Taxi',
     description: 'Hire a taxi by the hour in Coimbatore for business meetings, wedding shopping, temple visits, or local sightseeing. Clear hourly package fare estimates.',
     canonicalPath: '/services/hourly-rental/',
+    ogImage: 'service-hourly.webp',
     breadcrumbs: [
       { name: 'Home', path: '/' },
       { name: 'Taxi Services', path: '/services/' },
@@ -92,6 +96,7 @@ const ALL_ROUTES: RouteMeta[] = [
     title: t.metaTitle,
     description: t.metaDescription,
     canonicalPath: t.path,
+    ogImage: t.imageFilename,
     breadcrumbs: [
       { name: 'Home', path: '/' },
       { name: 'Tours', path: '/tours/' },
@@ -115,6 +120,7 @@ const ALL_ROUTES: RouteMeta[] = [
     description: b.metaDescription,
     canonicalPath: b.path,
     ogType: 'article' as const,
+    ogImage: b.imageFilename,
     breadcrumbs: [
       { name: 'Home', path: '/' },
       { name: 'Travel Blog', path: '/blog/' },
@@ -132,6 +138,7 @@ const ALL_ROUTES: RouteMeta[] = [
     description:
       'Learn about Yellow Go Taxi, a taxi and tour booking service planned for Coimbatore, Tamil Nadu. Focused on transparent fare estimation and structured service modes.',
     canonicalPath: '/about/',
+    ogImage: 'why-choose-us.webp',
     breadcrumbs: [
       { name: 'Home', path: '/' },
       { name: 'About Us', path: '/about/' },
@@ -198,6 +205,7 @@ const ALL_ROUTES: RouteMeta[] = [
     description:
       'The requested page could not be found. Explore Yellow Go Taxi services, outstation tours, and travel guides from Coimbatore.',
     canonicalPath: '/404/',
+    noindex: true,
   },
 ];
 
@@ -220,6 +228,12 @@ function runPrerender() {
   for (const route of ALL_ROUTES) {
     const appHtml = renderToString(<App initialPath={route.routePath} />);
     const canonicalUrl = `https://yellowgotaxi.com${route.canonicalPath}`;
+    const rawImg = route.ogImage || 'hero-suv.webp';
+    const fullImageUrl = rawImg.startsWith('http')
+      ? rawImg
+      : `https://yellowgotaxi.com/images/${rawImg.replace(/^\/?images\//, '')}`;
+    const robotsContent = route.noindex ? 'noindex, follow' : 'index, follow';
+    const ogType = route.ogType || 'website';
     const jsonLd = JSON.stringify(buildStructuredDataJson(route));
 
     let pageHtml = templateHtml
@@ -227,6 +241,10 @@ function runPrerender() {
       .replace(
         /<meta\s+name="description"\s+content="[^"]*"\s*\/?>/,
         `<meta name="description" content="${escapeHtmlAttr(route.description)}" />`
+      )
+      .replace(
+        /<meta\s+name="robots"\s+content="[^"]*"\s*\/?>/,
+        `<meta name="robots" content="${robotsContent}" />`
       )
       .replace(
         /<link\s+rel="canonical"\s+href="[^"]*"\s*\/?>/,
@@ -241,12 +259,28 @@ function runPrerender() {
         `<meta property="og:description" content="${escapeHtmlAttr(route.description)}" />`
       )
       .replace(
+        /<meta\s+property="og:type"\s+content="[^"]*"\s*\/?>/,
+        `<meta property="og:type" content="${ogType}" />`
+      )
+      .replace(
+        /<meta\s+property="og:url"\s+content="[^"]*"\s*\/?>/,
+        `<meta property="og:url" content="${escapeHtmlAttr(canonicalUrl)}" />`
+      )
+      .replace(
+        /<meta\s+property="og:image"\s+content="[^"]*"\s*\/?>/,
+        `<meta property="og:image" content="${escapeHtmlAttr(fullImageUrl)}" />`
+      )
+      .replace(
         /<meta\s+name="twitter:title"\s+content="[^"]*"\s*\/?>/,
         `<meta name="twitter:title" content="${escapeHtmlAttr(route.title)}" />`
       )
       .replace(
         /<meta\s+name="twitter:description"\s+content="[^"]*"\s*\/?>/,
         `<meta name="twitter:description" content="${escapeHtmlAttr(route.description)}" />`
+      )
+      .replace(
+        /<meta\s+name="twitter:image"\s+content="[^"]*"\s*\/?>/,
+        `<meta name="twitter:image" content="${escapeHtmlAttr(fullImageUrl)}" />`
       )
       .replace(
         '</head>',

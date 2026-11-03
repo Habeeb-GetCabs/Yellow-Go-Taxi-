@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { business } from '../config/business';
+import { GENERAL_FAQS } from '../data/faqsData';
 
 export interface BreadcrumbEntry {
   name: string;
@@ -11,6 +12,8 @@ export interface SeoHeadProps {
   description: string;
   canonicalPath: string;
   ogType?: 'website' | 'article';
+  ogImage?: string;
+  noindex?: boolean;
   breadcrumbs?: BreadcrumbEntry[];
   articleSchema?: {
     headline: string;
@@ -23,6 +26,10 @@ export interface SeoHeadProps {
 export function buildStructuredDataJson(props: SeoHeadProps): Record<string, unknown>[] {
   const baseUrl = (business.websiteUrl || 'https://yellowgotaxi.com').replace(/\/$/, '');
   const fullUrl = `${baseUrl}${props.canonicalPath}`;
+  const rawImg = props.ogImage || 'hero-suv.webp';
+  const fullImageUrl = rawImg.startsWith('http')
+    ? rawImg
+    : `${baseUrl}/images/${rawImg.replace(/^\/?images\//, '')}`;
 
   const schemas: Record<string, unknown>[] = [];
 
@@ -32,6 +39,9 @@ export function buildStructuredDataJson(props: SeoHeadProps): Record<string, unk
     '@type': 'TaxiService',
     name: business.name,
     url: baseUrl,
+    logo: `${baseUrl}/images/yellow-go-taxi-logo.svg`,
+    image: `${baseUrl}/images/hero-suv.webp`,
+    priceRange: '₹₹',
     areaServed: {
       '@type': 'City',
       name: business.city,
@@ -51,7 +61,7 @@ export function buildStructuredDataJson(props: SeoHeadProps): Record<string, unk
   if (business.address.trim()) {
     taxiSchema.address = {
       '@type': 'PostalAddress',
-      streetAddress: business.address.trim(),
+      streetAddress: 'Gandhipuram',
       addressLocality: business.city,
       addressRegion: business.state,
       addressCountry: business.country,
@@ -59,6 +69,32 @@ export function buildStructuredDataJson(props: SeoHeadProps): Record<string, unk
   }
 
   schemas.push(taxiSchema);
+
+  // 1b. WebSite schema on Homepage
+  if (props.canonicalPath === '/') {
+    schemas.push({
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: business.name,
+      url: baseUrl,
+    });
+  }
+
+  // 1c. FAQPage schema on /faq/
+  if (props.canonicalPath === '/faq/') {
+    schemas.push({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: GENERAL_FAQS.map((faq) => ({
+        '@type': 'Question',
+        name: faq.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: faq.answer,
+        },
+      })),
+    });
+  }
 
   // 2. BreadcrumbList schema
   if (props.breadcrumbs && props.breadcrumbs.length > 0) {
@@ -81,6 +117,7 @@ export function buildStructuredDataJson(props: SeoHeadProps): Record<string, unk
       '@type': 'BlogPosting',
       headline: props.articleSchema.headline,
       description: props.articleSchema.description,
+      image: fullImageUrl,
       mainEntityOfPage: fullUrl,
       author: {
         '@type': 'Organization',
@@ -89,6 +126,10 @@ export function buildStructuredDataJson(props: SeoHeadProps): Record<string, unk
       publisher: {
         '@type': 'Organization',
         name: business.name,
+        logo: {
+          '@type': 'ImageObject',
+          url: `${baseUrl}/images/yellow-go-taxi-logo.svg`,
+        },
       },
     });
   }
@@ -97,9 +138,20 @@ export function buildStructuredDataJson(props: SeoHeadProps): Record<string, unk
 }
 
 export const SeoHead: React.FC<SeoHeadProps> = (props) => {
-  const { title, description, canonicalPath, ogType = 'website' } = props;
+  const {
+    title,
+    description,
+    canonicalPath,
+    ogType = 'website',
+    ogImage = 'hero-suv.webp',
+    noindex = false,
+  } = props;
   const baseUrl = (business.websiteUrl || 'https://yellowgotaxi.com').replace(/\/$/, '');
   const canonicalUrl = `${baseUrl}${canonicalPath}`;
+  const fullImageUrl = ogImage.startsWith('http')
+    ? ogImage
+    : `${baseUrl}/images/${ogImage.replace(/^\/?images\//, '')}`;
+  const robotsContent = noindex ? 'noindex, follow' : 'index, follow';
 
   useEffect(() => {
     document.title = title;
@@ -115,12 +167,16 @@ export const SeoHead: React.FC<SeoHeadProps> = (props) => {
     };
 
     setMeta('meta[name="description"]', 'name', 'description', description);
+    setMeta('meta[name="robots"]', 'name', 'robots', robotsContent);
     setMeta('meta[property="og:title"]', 'property', 'og:title', title);
     setMeta('meta[property="og:description"]', 'property', 'og:description', description);
     setMeta('meta[property="og:type"]', 'property', 'og:type', ogType);
     setMeta('meta[property="og:url"]', 'property', 'og:url', canonicalUrl);
+    setMeta('meta[property="og:image"]', 'property', 'og:image', fullImageUrl);
+    setMeta('meta[name="twitter:card"]', 'name', 'twitter:card', 'summary_large_image');
     setMeta('meta[name="twitter:title"]', 'name', 'twitter:title', title);
     setMeta('meta[name="twitter:description"]', 'name', 'twitter:description', description);
+    setMeta('meta[name="twitter:image"]', 'name', 'twitter:image', fullImageUrl);
 
     let canonicalEl = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
     if (!canonicalEl) {
@@ -140,7 +196,7 @@ export const SeoHead: React.FC<SeoHeadProps> = (props) => {
       document.head.appendChild(scriptEl);
     }
     scriptEl.textContent = JSON.stringify(buildStructuredDataJson(props));
-  }, [title, description, canonicalUrl, ogType, props]);
+  }, [title, description, canonicalUrl, ogType, fullImageUrl, robotsContent, props]);
 
   return null;
 };

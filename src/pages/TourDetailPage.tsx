@@ -31,6 +31,7 @@ export const TourDetailPage: React.FC<TourDetailPageProps> = ({ tour, onNavigate
         title={tour.metaTitle}
         description={tour.metaDescription}
         canonicalPath={tour.path}
+        ogImage={tour.imageFilename}
         breadcrumbs={[
           { name: 'Home', path: '/' },
           { name: 'Tours', path: '/tours/' },

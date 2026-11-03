@@ -46,7 +46,7 @@ export function buildWhatsAppMessage(payload: Omit<WhatsAppBookingPayload, 'what
     'I would like to enquire about a taxi booking.',
     '',
     `Name: ${payload.customerName.trim()}`,
-    `Phone: ${payload.customerPhone.trim()}`,
+    ...(payload.customerPhone.trim() ? [`Phone: ${payload.customerPhone.trim()}`] : []),
     `Trip Type: ${TRIP_MODE_TITLES[payload.tripType]}`,
     `Pickup: ${payload.pickupAddress.trim()}`,
     `Destination: ${payload.dropAddress.trim()}`,

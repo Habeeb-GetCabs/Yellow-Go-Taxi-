@@ -905,6 +905,7 @@ export const NotFoundPage: React.FC<PageNavProps> = ({ onNavigate }) => {
         title="Page Not Found (404) | Yellow Go Taxi"
         description="The requested page could not be found. Explore Yellow Go Taxi services, outstation tours, and travel guides from Coimbatore."
         canonicalPath="/404/"
+        noindex={true}
       />
 
       <section className="py-20 bg-[#F7F6F1]">
