@@ -33,14 +33,16 @@ const getEnv = (key: string): string => {
 
 export const analyticsConfig: AnalyticsConfig = {
   ga4MeasurementId: getEnv('VITE_GA4_MEASUREMENT_ID'),
-  googleAdsConversionId: getEnv('VITE_GOOGLE_ADS_CONVERSION_ID'),
+  googleAdsConversionId: getEnv('VITE_GOOGLE_ADS_CONVERSION_ID') || 'AW-18519949735',
   conversionLabels: {
     bookingFormSubmit:
       getEnv('VITE_GADS_LABEL_BOOKING_SUBMIT') || getEnv('VITE_GOOGLE_ADS_BOOKING_LABEL'),
     whatsappBookingClick:
       getEnv('VITE_GADS_LABEL_WHATSAPP_CLICK') || getEnv('VITE_GOOGLE_ADS_WHATSAPP_LABEL'),
     phoneCallClick:
-      getEnv('VITE_GADS_LABEL_PHONE_CLICK') || getEnv('VITE_GOOGLE_ADS_PHONE_LABEL'),
+      getEnv('VITE_GADS_LABEL_PHONE_CLICK') ||
+      getEnv('VITE_GOOGLE_ADS_PHONE_LABEL') ||
+      'Q1QwCNbfo7EdEKeDgP9E',
     fareCalculationRequest: '',
     tourBookingCtaClick: '',
     contactEnquirySubmit: getEnv('VITE_GADS_LABEL_CONTACT_ENQUIRY'),
